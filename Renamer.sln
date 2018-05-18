@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Renamer", "Renamer\Renamer.csproj", "{B799B189-3E0A-4568-8633-6FEBBFE50EA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenamerXUnitTest", "RenamerXUnitTest\RenamerXUnitTest.csproj", "{DDEA4763-81AC-4607-A432-C0EB8CCEA13A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B799B189-3E0A-4568-8633-6FEBBFE50EA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B799B189-3E0A-4568-8633-6FEBBFE50EA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B799B189-3E0A-4568-8633-6FEBBFE50EA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B799B189-3E0A-4568-8633-6FEBBFE50EA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDEA4763-81AC-4607-A432-C0EB8CCEA13A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDEA4763-81AC-4607-A432-C0EB8CCEA13A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDEA4763-81AC-4607-A432-C0EB8CCEA13A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDEA4763-81AC-4607-A432-C0EB8CCEA13A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F5D11563-4F58-455F-93F7-67D92FFED7B0}
+	EndGlobalSection
+EndGlobal
