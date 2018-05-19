@@ -8,6 +8,7 @@ namespace RenamerXUnitTest
 {
     public class TestRename
     {
+        /*
         [Fact]
         public void TestRenameFile()
         {
@@ -68,5 +69,6 @@ namespace RenamerXUnitTest
             src.RenameAlgo("ab*cd", "*cd");
             src.RenameAlgo("*", "ab*");
         }
+        */
     }
 }

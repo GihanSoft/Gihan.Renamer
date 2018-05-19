@@ -1,4 +1,5 @@
-﻿using Gihan.Renamer.Models.Enum;
+﻿using Gihan.Renamer.Models;
+using Gihan.Renamer.Models.Enum;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +9,54 @@ namespace Gihan.Renamer
 {
     public static class Renamer
     {
+        private static string ReplaceRule(this string src, RenameRule rule)
+        {
+            var result = "";
+            switch (rule.IsAlgo)
+            {
+                case false:
+                    result = src.Replace(rule.From, rule.To);
+                    break;
+                case true:
+                    result = src.ReplaceAlgo(rule.From, rule.To);
+                    break;
+            }
+            return result;
+        }
+        private static string ReplaceRule(this string src, IEnumerable<RenameRule> rules)
+        {
+            var result = src;
+            foreach (var rule in rules)
+            {
+                result = result.ReplaceRule(rule);
+            }
+            return result;
+        }
 
+        public static void Rename(this DirectoryInfo directory, IEnumerable<RenameRule> renameRules)
+        {
+            foreach (var dir in directory.EnumerateDirectories())
+            {
+                dir.Rename(renameRules);
+            }
+            var files = directory.EnumerateFiles();
+            foreach (var file in files)
+            {
+                var name = Path.GetFileNameWithoutExtension(file.FullName);
+                var destName = name.ReplaceRule(renameRules);
+                file.Rename(destName);
+            }
+            var dirName = Path.GetFileNameWithoutExtension(directory.FullName);
+            var destDirName = dirName.ReplaceRule(renameRules);
+            directory.Rename(destDirName);
+        }
+
+        public static void Renme(string directoryPath, IEnumerable<RenameRule> renameRules)
+        {
+            var dir = new DirectoryInfo(directoryPath);
+            if (!dir.Exists) throw new Exception();
+            dir.Rename(renameRules);
+        }
 
         #region Extension
         static void MoveTo(this FileSystemInfo info, string dastName)
@@ -30,7 +78,7 @@ namespace Gihan.Renamer
             return s1 + s2 + s3;
         }
 
-        public static void Rename(this FileSystemInfo fileSystemInfo, string newName)
+        static void Rename(this FileSystemInfo fileSystemInfo, string newName)
         {
             var fullPath = fileSystemInfo.FullName;
             fullPath = fullPath.TrimEnd('\\');
@@ -54,19 +102,10 @@ namespace Gihan.Renamer
             }
         }
 
-        static string ReplaceFt(this string src, IEnumerable<Tuple<string, string>> fts)
-        {
-            foreach (var ft in fts)
-            {
-                src = src.Replace(ft.Item1, ft.Item2);
-            }
-            return src;
-        }
-
-        public static void RenameFt(this FileSystemInfo fileSystemInfo, IEnumerable<Tuple<string, string>> fts)
+        static void RenameFt(this FileSystemInfo fileSystemInfo, string from, string to)
         {
             var name = Path.GetFileNameWithoutExtension(fileSystemInfo.FullName);
-            var destName = name.ReplaceFt(fts);
+            var destName = name.Replace(from, to);
             fileSystemInfo.Rename(destName);
         }
 
@@ -87,7 +126,7 @@ namespace Gihan.Renamer
             return AlgoToParts[0] + constPart + AlgoToParts[1];
         }
 
-        public static void RenameAlgo(this FileSystemInfo fileSystemInfo, string AlgoF, string AlgoTo)
+        static void RenameAlgo(this FileSystemInfo fileSystemInfo, string AlgoF, string AlgoTo)
         {
             var fullPath = fileSystemInfo.FullName;
             fullPath = fullPath.TrimEnd('\\');

@@ -3,10 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Gihan.Renamer</RootNamespace>
-    <Version>0.1.0</Version>
+    <Version>1.0.0</Version>
     <Authors>Muhammad Babayi</Authors>
     <Company>GihanSoft</Company>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\Enum\" />
+  </ItemGroup>
 
 </Project>
