@@ -5,7 +5,12 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Renamer", "Renamer\Renamer.csproj", "{B799B189-3E0A-4568-8633-6FEBBFE50EA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenamerXUnitTest", "RenamerXUnitTest\RenamerXUnitTest.csproj", "{DDEA4763-81AC-4607-A432-C0EB8CCEA13A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RenamerXUnitTest", "RenamerXUnitTest\RenamerXUnitTest.csproj", "{DDEA4763-81AC-4607-A432-C0EB8CCEA13A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E3120CEB-CC1F-4A13-9A7B-A6889AC38CC1}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

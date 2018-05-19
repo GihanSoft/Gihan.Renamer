@@ -7,6 +7,11 @@
     <Authors>Muhammad Babayi</Authors>
     <Company>GihanSoft</Company>
     <RepositoryType>git</RepositoryType>
+    <Copyright>Copyright (c) 2018 Mohammad Babayi</Copyright>
+    <PackageLicenseUrl>https://github.com/chiefmb/SubSetter/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/chiefmb/SubSetter</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/chiefmb/SubSetter</RepositoryUrl>
+    <ApplicationIcon />
   </PropertyGroup>
 
   <ItemGroup>
