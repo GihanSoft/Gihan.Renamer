@@ -11,25 +11,22 @@ namespace Gihan.Renamer
         private static string ReplaceRule(this string src, RenameRule rule)
         {
             var result = "";
-            switch (rule.IsAlgo)
+            if (!rule.IsAlgo)
             {
-                case false:
-                    result = src.Replace(rule.From, rule.To);
-                    break;
-                case true:
-                    result = src.ReplaceAlgo(rule.From, rule.To);
-                    break;
+                if (string.IsNullOrEmpty(rule.From))
+                    throw new Exception("Cannot Replace nothing with any thing");
+                result = src.Replace(rule.From, rule.To);
             }
+            else if (rule.IsAlgo)
+            {
+                result = src.ReplaceAlgo(rule.From, rule.To);
+            }
+
             return result;
         }
         private static string ReplaceRule(this string src, IEnumerable<RenameRule> rules)
         {
-            var result = src;
-            foreach (var rule in rules)
-            {
-                result = result.ReplaceRule(rule);
-            }
-            return result;
+            return rules.Aggregate(src, (current, rule) => current.ReplaceRule(rule));
         }
 
         public static void Rename(this DirectoryInfo directory, IEnumerable<RenameRule> renameRules)
@@ -51,7 +48,7 @@ namespace Gihan.Renamer
         public static void Rename(string directoryPath, IEnumerable<RenameRule> renameRules)
         {
             var dir = new DirectoryInfo(directoryPath);
-            if (!dir.Exists) throw new Exception();
+            if (!dir.Exists) throw new ArgumentException("Directory is not Exist", nameof(directoryPath));
             dir.Rename(renameRules);
         }
 
@@ -114,8 +111,10 @@ namespace Gihan.Renamer
             var algoFParts = algoF.Split('*');
             var algoToParts = algoTo.Split('*');
 
-            if (algoToParts.Length > 2) throw new Exception();
-            if (algoFParts.Length > 2) throw new Exception();
+            if (algoFParts.Length != 2)
+                throw new ArgumentException("0 or more than 1 '*' is in To Algo", nameof(algoF));
+            if (algoToParts.Length != 2)
+                throw new ArgumentException("0 or more than 1 '*' is in From Algo", nameof(algoTo));
 
             if (!src.StartsWith(algoFParts[0]) || !src.EndsWith(algoFParts[1]))
                 return src;

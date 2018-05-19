@@ -81,7 +81,18 @@ namespace RenamerXUnitTest
                 new RenameRule("animeDl *", "*", true), 
             };
             Renamer.Rename(dir, rules);
+        }
 
+        [Fact]
+        public void TestEmptyFtRule()
+        {
+            const string dir = @"E:\Entertainment\Anime\Made in Abyss";
+            var rules = new[]
+            {
+                new RenameRule("", ""),
+                new RenameRule("", "", true),
+            };
+            Renamer.Rename(dir, rules);
         }
     }
 }
