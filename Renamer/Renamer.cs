@@ -35,20 +35,17 @@ namespace Gihan.Renamer
         public static void Rename(this DirectoryInfo directory, IEnumerable<RenameRule> renameRules)
         {
             var rulesArray = renameRules as RenameRule[] ?? renameRules.ToArray();
-            foreach (var dir in directory.EnumerateDirectories())
+            foreach (var dir in directory.GetDirectories())
             {
                 dir.Rename(rulesArray);
             }
-            var files = directory.EnumerateFiles();
+            var files = directory.GetFileSystemInfos();
             foreach (var file in files)
             {
                 var name = Path.GetFileNameWithoutExtension(file.FullName);
                 var destName = name.ReplaceRule(rulesArray);
                 file.Rename(destName);
             }
-            var dirName = Path.GetFileNameWithoutExtension(directory.FullName);
-            var destDirName = dirName.ReplaceRule(rulesArray);
-            directory.Rename(destDirName);
         }
 
         public static void Rename(string directoryPath, IEnumerable<RenameRule> renameRules)
@@ -119,6 +116,9 @@ namespace Gihan.Renamer
 
             if (algoToParts.Length > 2) throw new Exception();
             if (algoFParts.Length > 2) throw new Exception();
+
+            if (!src.StartsWith(algoFParts[0]) || !src.EndsWith(algoFParts[1]))
+                return src;
 
             var jIndex = algoF.IndexOf("*", StringComparison.Ordinal);
             var jEnd = src.LastIndexOf(algoFParts[1], StringComparison.Ordinal);

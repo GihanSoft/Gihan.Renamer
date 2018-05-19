@@ -3,6 +3,7 @@ using System.IO;
 using Xunit;
 using Gihan.Renamer;
 using System.Collections.Generic;
+using Gihan.Renamer.Models;
 
 namespace RenamerXUnitTest
 {
@@ -70,5 +71,17 @@ namespace RenamerXUnitTest
             src.RenameAlgo("*", "ab*");
         }
         */
+        [Fact]
+        public void TestRenameByRules()
+        {
+            const string dir = @"E:\Entertainment\Anime\Made in Abyss";
+            var rules = new[]
+            {
+                new RenameRule("Made", "animeDl Made"),
+                new RenameRule("animeDl *", "*", true), 
+            };
+            Renamer.Rename(dir, rules);
+
+        }
     }
 }
