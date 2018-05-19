@@ -1,5 +1,4 @@
 ﻿using Gihan.Renamer.Models;
-using Gihan.Renamer.Models.Enum;
 using System;
 using System.Collections.Generic;
 using System.IO;
