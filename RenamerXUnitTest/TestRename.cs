@@ -58,5 +58,15 @@ namespace RenamerXUnitTest
             Assert.True(dest.Exists);
             dest.RenameFt(new[] { new Tuple<string, string>("B", "b") });
         }
+
+        [Fact]
+        public void RenameAlgoTest()
+        {
+            var src = new DirectoryInfo(@"D:\WorkSpace\ab123cd");
+            src.RenameAlgo("ab*cd", "*");
+            src.RenameAlgo("*", "ab*cd");
+            src.RenameAlgo("ab*cd", "*cd");
+            src.RenameAlgo("*", "ab*");
+        }
     }
 }

@@ -33,11 +33,25 @@ namespace Gihan.Renamer
         public static void Rename(this FileSystemInfo fileSystemInfo, string newName)
         {
             var fullPath = fileSystemInfo.FullName;
-            fullPath = fullPath.EndsWith("\\") ? fullPath.Substring(0, fullPath.Length - 1) : fullPath;
+            fullPath = fullPath.TrimEnd('\\');
             var name = Path.GetFileNameWithoutExtension(fullPath);
             var index = fullPath.LastIndexOf(name);
             var destPath = fullPath.Replace(name, newName, index, name.Length);
-            fileSystemInfo.MoveTo(destPath);
+            try
+            {
+                fileSystemInfo.MoveTo(destPath);
+            }
+            catch (Exception err)
+            {
+                if (fullPath == destPath) return;
+                if (fullPath.ToLower() == destPath.ToLower())
+                {
+                    fileSystemInfo.MoveTo(fullPath + "_");
+                    fileSystemInfo.MoveTo(destPath);
+                    return;
+                }
+                throw err;
+            }
         }
 
         static string ReplaceFt(this string src, IEnumerable<Tuple<string, string>> fts)
@@ -53,26 +67,34 @@ namespace Gihan.Renamer
         {
             var name = Path.GetFileNameWithoutExtension(fileSystemInfo.FullName);
             var destName = name.ReplaceFt(fts);
-            try
-            {
-                fileSystemInfo.Rename(destName);
-            }
-            catch (Exception err)
-            {
-                if (name == destName) return;
-                if (name.ToLower() == destName.ToLower())
-                {
-                    fileSystemInfo.Rename("_" + name);
-                    fileSystemInfo.Rename(destName);
-                    return;
-                }
-                throw err;
-            }
+            fileSystemInfo.Rename(destName);
+        }
+
+        static string ReplaceAlgo(this string src, string AlgoF, string AlgoTo)
+        {
+            var AlgoFParts = AlgoF.Split('*');
+            var AlgoToParts = AlgoTo.Split('*');
+
+            if (AlgoToParts.Length > 2) throw new Exception();
+            if (AlgoFParts.Length > 2) throw new Exception();
+
+            var jIndex = AlgoF.IndexOf("*");
+            var jEnd = src.LastIndexOf(AlgoFParts[1]);
+            var jLength = jEnd - jIndex;
+            if (AlgoFParts[1] == "") jLength++;
+            string constPart = src.Substring(jIndex, jLength);
+
+            return AlgoToParts[0] + constPart + AlgoToParts[1];
         }
 
         public static void RenameAlgo(this FileSystemInfo fileSystemInfo, string AlgoF, string AlgoTo)
         {
+            var fullPath = fileSystemInfo.FullName;
+            fullPath = fullPath.TrimEnd('\\');
+            var name = Path.GetFileNameWithoutExtension(fullPath);
+            var destName = name.ReplaceAlgo(AlgoF, AlgoTo);
 
+            fileSystemInfo.Rename(destName);
         }
 
         #endregion
