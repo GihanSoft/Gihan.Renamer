@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Gihan.Renamer</RootNamespace>
-    <Version>2.1.1</Version>
+    <Version>2.1.2</Version>
     <Authors>Muhammad Babayi</Authors>
     <Company>GihanSoft</Company>
     <RepositoryType>git</RepositoryType>
