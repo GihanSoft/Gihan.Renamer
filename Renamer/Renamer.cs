@@ -1,143 +1,36 @@
-﻿using Gihan.Renamer.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Gihan.Renamer.Base;
+using Gihan.Renamer.Ex;
+using Gihan.Renamer.Models;
 
 namespace Gihan.Renamer
 {
-    public static class Renamer
+    public class Renamer
     {
-        private static string ReplaceRule(this string src, RenameRule rule)
-        {
-            var result = "";
-            if (!rule.IsAlgo)
-            {
-                if (string.IsNullOrEmpty(rule.From))
-                    throw new Exception("Cannot Replace nothing with any thing");
-                result = src.Replace(rule.From, rule.To);
-            }
-            else if (rule.IsAlgo)
-            {
-                result = src.ReplaceAlgo(rule.From, rule.To);
-            }
+        private StorageHelperBase StorageHelper { get; }
 
-            return result;
-        }
-        private static string ReplaceRule(this string src, IEnumerable<RenameRule> rules)
+        public Renamer(StorageHelperBase storageHelper)
         {
-            return rules.Aggregate(src, (current, rule) => current.ReplaceRule(rule));
+            StorageHelper = storageHelper?? new StorageHelperSysIo();
         }
 
-        public static void Rename(this DirectoryInfo directory, IEnumerable<RenameRule> renameRules)
+        public void RenameByRules(string dirPath, IEnumerable<RenameRule> renameRules)
         {
             var rulesArray = renameRules as RenameRule[] ?? renameRules.ToArray();
-            foreach (var dir in directory.GetDirectories())
+            var subFolders = StorageHelper.GetSubFolders(dirPath);
+            foreach (var subFolder in subFolders)
             {
-                dir.Rename(rulesArray);
+                RenameByRules(subFolder, rulesArray);
             }
-            var files = directory.GetFileSystemInfos();
-            foreach (var file in files)
+            var items = StorageHelper.GetSubItems(dirPath);
+            foreach (var item in items)
             {
-                var name = Path.GetFileNameWithoutExtension(file.FullName);
-                var destName = name.ReplaceRule(rulesArray);
-                file.Rename(destName);
-            }
-        }
-
-        public static void Rename(string directoryPath, IEnumerable<RenameRule> renameRules)
-        {
-            var dir = new DirectoryInfo(directoryPath);
-            if (!dir.Exists) throw new ArgumentException("Directory is not Exist", nameof(directoryPath));
-            dir.Rename(renameRules);
-        }
-
-        #region Extension
-
-        private static void MoveTo(this FileSystemInfo info, string dastName)
-        {
-            switch (info)
-            {
-                case FileInfo _:
-                    (info as FileInfo)?.MoveTo(dastName);
-                    break;
-                case DirectoryInfo _:
-                    (info as DirectoryInfo)?.MoveTo(dastName);
-                    break;
-                default:
-                    throw new ArgumentException("unknown type of FileSystemInfo");
+                var name = Path.GetFileNameWithoutExtension(item);
+                var destName = name.ReplaceRules(rulesArray);
+                StorageHelper.RenameWithoutExtension(item, destName);
             }
         }
-
-        private static string Replace(this string src, string oldValue, string newValue, int startIndex, int length)
-        {
-            var s1 = src.Substring(0, startIndex);
-            var s2 = src.Substring(startIndex, length);
-            var s3 = src.Substring(startIndex + length);
-
-            s2 = s2.Replace(oldValue, newValue);
-            return s1 + s2 + s3;
-        }
-
-        private static void Rename(this FileSystemInfo fileSystemInfo, string newName)
-        {
-            var fullPath = fileSystemInfo.FullName;
-            fullPath = fullPath.TrimEnd('\\');
-            var name = Path.GetFileNameWithoutExtension(fullPath);
-            var index = fullPath.LastIndexOf(name, StringComparison.Ordinal);
-            var destPath = fullPath.Replace(name, newName, index, name.Length);
-            try
-            {
-                fileSystemInfo.MoveTo(destPath);
-            }
-            catch (Exception)
-            {
-                if (fullPath == destPath) return;
-                if (!string.Equals(fullPath, destPath, StringComparison.CurrentCultureIgnoreCase)) throw;
-                fileSystemInfo.MoveTo(fullPath + "_");
-                fileSystemInfo.MoveTo(destPath);
-            }
-        }
-
-        private static void RenameFt(this FileSystemInfo fileSystemInfo, string from, string to)
-        {
-            var name = Path.GetFileNameWithoutExtension(fileSystemInfo.FullName);
-            var destName = name.Replace(from, to);
-            fileSystemInfo.Rename(destName);
-        }
-
-        private static string ReplaceAlgo(this string src, string algoF, string algoTo)
-        {
-            var algoFParts = algoF.Split('*');
-            var algoToParts = algoTo.Split('*');
-
-            if (algoFParts.Length != 2)
-                throw new ArgumentException("0 or more than 1 '*' is in To Algo", nameof(algoF));
-            if (algoToParts.Length != 2)
-                throw new ArgumentException("0 or more than 1 '*' is in From Algo", nameof(algoTo));
-
-            if (!src.StartsWith(algoFParts[0]) || !src.EndsWith(algoFParts[1]))
-                return src;
-
-            var jIndex = algoF.IndexOf("*", StringComparison.Ordinal);
-            var jEnd = src.LastIndexOf(algoFParts[1], StringComparison.Ordinal);
-            var jLength = jEnd - jIndex;
-            if (algoFParts[1] == "") jLength++;
-            var constPart = src.Substring(jIndex, jLength);
-
-            return algoToParts[0] + constPart + algoToParts[1];
-        }
-
-        private static void RenameAlgo(this FileSystemInfo fileSystemInfo, string AlgoF, string AlgoTo)
-        {
-            var fullPath = fileSystemInfo.FullName;
-            fullPath = fullPath.TrimEnd('\\');
-            var name = Path.GetFileNameWithoutExtension(fullPath);
-            var destName = name.ReplaceAlgo(AlgoF, AlgoTo);
-
-            fileSystemInfo.Rename(destName);
-        }
-
-        #endregion
     }
 }
