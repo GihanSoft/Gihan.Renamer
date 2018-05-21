@@ -29,7 +29,7 @@ namespace Gihan.Renamer.Ex
             var name = Path.GetFileNameWithoutExtension(fullPath);
             var index = fullPath.LastIndexOf(name, StringComparison.Ordinal);
             var destPath = fullPath.Replace(name, newName, index, name.Length);
-
+            if(destPath == fullPath) return;
             if (File.Exists(destPath) || Directory.Exists(destPath))
             {
                 switch (option)

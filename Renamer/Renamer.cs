@@ -11,7 +11,7 @@ namespace Gihan.Renamer
     {
         private IStorageHelper StorageHelper { get; }
 
-        public Renamer(IStorageHelper storageHelper)
+        public Renamer(IStorageHelper storageHelper = null)
         {
             StorageHelper = storageHelper?? new StorageHelperSysIo();
         }
