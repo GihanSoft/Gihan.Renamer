@@ -6,10 +6,10 @@ using Gihan.Renamer.Models.Enums;
 
 namespace Gihan.Renamer
 {
-    class StorageHelperSysIo : Base.StorageHelperBase
+    public class StorageHelperSysIo : Base.IStorageHelper
     {
 
-        public override void RenameWithoutExtension(string targetPath, string destName, 
+        public void RenameWithoutExtension(string targetPath, string destName, 
             NameCollisionOption option = NameCollisionOption.GenerateUniqueName)
         {
             targetPath = targetPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
@@ -22,7 +22,7 @@ namespace Gihan.Renamer
             fileSystemInfo.Rename(destName, option);
         }
 
-        public override void Rename(string targetPath, string destName, 
+        public void Rename(string targetPath, string destName, 
             NameCollisionOption option = NameCollisionOption.GenerateUniqueName)
         {
             targetPath = targetPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
@@ -30,14 +30,14 @@ namespace Gihan.Renamer
             RenameWithoutExtension(targetPath, destName + extension, option);
         }
 
-        public override IEnumerable<string> GetSubFolders(string dirPath)
+        public IEnumerable<string> GetSubFolders(string dirPath)
         {
             var dir = new DirectoryInfo(dirPath);
             var subDirsPath = dir.EnumerateDirectories().Select(d => d.FullName);
             return subDirsPath;
         }
 
-        public override IEnumerable<string> GetSubItems(string dirPath)
+        public IEnumerable<string> GetSubItems(string dirPath)
         {
             var dir = new DirectoryInfo(dirPath);
             var subItemsPath = dir.EnumerateFileSystemInfos().Select(i => i.FullName);

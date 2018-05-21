@@ -9,9 +9,9 @@ namespace Gihan.Renamer
 {
     public class Renamer
     {
-        private StorageHelperBase StorageHelper { get; }
+        private IStorageHelper StorageHelper { get; }
 
-        public Renamer(StorageHelperBase storageHelper)
+        public Renamer(IStorageHelper storageHelper)
         {
             StorageHelper = storageHelper?? new StorageHelperSysIo();
         }
