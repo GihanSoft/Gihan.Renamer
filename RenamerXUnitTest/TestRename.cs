@@ -9,7 +9,12 @@ namespace RenamerXUnitTest
         [Fact]
         public void X()
         {
-            //System.IO.File.Delete(@"D:\WorkSpace\ab123cd\bb");
+            Renamer renamer = new Renamer();
+            var rules = new[]
+            {
+                new RenameRule("BTOOOM.", "Btooom."),
+            };
+            renamer.RenameByRules(@"E:\Entertainment\Anime\Btooom!", rules);
         }
     }
 }
