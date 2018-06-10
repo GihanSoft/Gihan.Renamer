@@ -1,2 +1,2 @@
 If your code don't make project crush, WELCOME.
-Add more implementationa for more platforms.
+Add more implementation for more platforms.

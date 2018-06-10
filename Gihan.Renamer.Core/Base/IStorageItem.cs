@@ -1,6 +1,6 @@
-﻿using Gihan.Renamer.Core.Models.Enums;
+﻿using Gihan.Renamer.Core.Enums;
 
-namespace Gihan.Renamer.Core.Models.Base
+namespace Gihan.Renamer.Core.Base
 {
     public interface IStorageItem
     {
@@ -8,14 +8,17 @@ namespace Gihan.Renamer.Core.Models.Base
         /// The full path of the item, if the item has a path.
         /// </summary>
         string Path { get; }
+
         /// <summary>
         /// The name of the item including the file name extension if there is one.
         /// </summary>
         string Name { get; }
+
         /// <summary>
         /// The parent folder of the current storage item.
         /// </summary>
         IFolder Parent { get; }
+
         /// <summary>
         /// The <see cref="StorageItemType"/> of this item.
         /// </summary>

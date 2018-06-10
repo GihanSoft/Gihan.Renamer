@@ -106,7 +106,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Base\StorageItem.cs" />
+    <Compile Include="File.cs" />
+    <Compile Include="Folder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Gihan.Renamer.UWP.rd.xml" />
   </ItemGroup>
@@ -114,6 +116,12 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.4</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gihan.Renamer.Core\Gihan.Renamer.Core.csproj">
+      <Project>{8156dce9-82e6-43cf-b565-712f3e427bc2}</Project>
+      <Name>Gihan.Renamer.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

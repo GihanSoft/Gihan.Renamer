@@ -1,4 +1,4 @@
-﻿namespace Gihan.Renamer.Core.Models.Enums
+﻿namespace Gihan.Renamer.Core.Enums
 {
     /// <summary>
     /// Specifies what to do if a file or folder with the specified name already exists
