@@ -30,7 +30,7 @@ namespace Gihan.Renamer.Core
         ///     Default value is <see cref="NameCollisionOption.FailIfExists"/>
         /// </param>
         /// <returns>
-        /// <see cref="File"/> that represents the copy
+        /// <see cref="IFile"/> that represents the copy
         ///     of the file created in the "<see cref="destinationFolder"/>".
         /// </returns>
         IFile Copy(IFolder destinationFolder,
@@ -52,7 +52,7 @@ namespace Gihan.Renamer.Core
         ///     with the specified "<see cref="desiredNewName"/>" already exists in the destination folder.
         /// </param>
         /// <returns>
-        /// <see cref="File"/> that represents the copy
+        /// <see cref="IFile"/> that represents the copy
         ///     of the file created in the "<see cref="destinationFolder"/>".
         /// </returns>
         IFile Copy(IFolder destinationFolder, string desiredNewName,
@@ -66,7 +66,7 @@ namespace Gihan.Renamer.Core
         /// The destination folder where the file is moved.
         /// </param>
         /// <param name="option">
-        /// An enum value that determines how responds if the "<see cref="desiredNewName"/>" is
+        /// An enum value that determines how responds if the name of current file is
         ///     the same as the name of an existing file in the destination folder.
         /// </param>
         void Move(IFolder destinationFolder,
@@ -88,6 +88,22 @@ namespace Gihan.Renamer.Core
         ///     the same as the name of an existing file in the destination folder.
         /// </param>
         void Move(IFolder destinationFolder, string desiredNewName,
+            NameCollisionOption option = NameCollisionOption.FailIfExists);
+
+        /// <summary>
+        /// Renames the current item but ignore extension.
+        ///     This method also specifies what to do if an existing
+        ///     item in the current item's location has the same name.
+        /// </summary>
+        /// <param name="desiredName">
+        /// The desired, new name of the current item.
+        /// </param>
+        /// <param name="option">
+        /// The enum value that determines how responds if the <see cref="desiredName"/> is the
+        ///     same as the name of an existing item in the current item's location.
+        ///     Default value is "<see cref="NameCollisionOption.FailIfExists"/>".
+        /// </param>
+        void RenameIgnoreExtension(string desiredName,
             NameCollisionOption option = NameCollisionOption.FailIfExists);
 
         /// <summary>

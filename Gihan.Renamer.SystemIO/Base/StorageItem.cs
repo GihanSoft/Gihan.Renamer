@@ -1,27 +1,86 @@
-﻿using System;
+﻿using System.Linq;
 using Gihan.Renamer.Core;
 using Gihan.Renamer.Core.Enums;
+
+using SysPath = System.IO.Path;
 
 namespace Gihan.Renamer.SystemIO.Base
 {
     public abstract class StorageItem : Core.Base.IStorageItem
     {
-        public string Path => throw new NotImplementedException();
+        protected System.IO.FileSystemInfo BaseStorageItem { get; }
 
-        public string Name => throw new NotImplementedException();
+        /// <summary>
+        /// The full path of the item, if the item has a path.
+        /// </summary>
+        public string Path => BaseStorageItem.FullName.
+            Trim(SysPath.AltDirectorySeparatorChar, SysPath.DirectorySeparatorChar);
 
-        public IFolder Parent => throw new NotImplementedException();
+        /// <summary>
+        /// The name of the item including the file name extension if there is one.
+        /// </summary>
+        public string Name => SysPath.GetFileName(Path);
 
-        public StorageItemType Type => throw new NotImplementedException();
+        /// <summary>
+        /// The parent folder of the current storage item.
+        /// </summary>
+        public abstract IFolder Parent { get; }
 
-        public void Delete()
+        /// <summary>
+        /// The <see cref="StorageItemType"/> of this item.
+        /// </summary>
+        public abstract StorageItemType Type { get; }
+
+        protected StorageItem(System.IO.FileSystemInfo item)
         {
-            throw new NotImplementedException();
+            BaseStorageItem = item;
         }
 
-        public void Rename(string desiredName, NameCollisionOption option = NameCollisionOption.FailIfExists)
+        /// <summary>
+        /// Deletes the current item.
+        /// </summary>
+        public void Delete()
         {
-            throw new NotImplementedException();
+            BaseStorageItem.Delete();
+        }
+
+        /// <summary>
+        /// Renames the current item. This method also specifies what to do if an existing
+        ///     item in the current item's location has the same name.
+        /// </summary>
+        /// <param name="desiredName">The desired, new name of the current item.</param>
+        /// <param name="option">
+        /// The enum value that determines how responds if the <see cref="desiredName"/> is the
+        ///     same as the name of an existing item in the current item's location.
+        ///     Default value is "<see cref="NameCollisionOption.FailIfExists"/>".
+        /// </param>
+        public abstract void Rename(string desiredName, 
+            NameCollisionOption option = NameCollisionOption.FailIfExists);
+
+        protected string NextName(string currentName)
+        {
+            currentName = new string(currentName.ToCharArray());
+            var currentNum = -1;
+            if (currentName.Last() != ')')
+                currentNum = 2;
+
+            string currentNumStr = null;
+            var i = 0;
+            if (currentNum == -1)
+                for (i = currentName.Length - 2; i > 0 && char.IsDigit(currentName[i]); i--)
+                {
+                    currentNumStr += currentName[i].ToString();
+                }
+
+            if (currentNum == -1 && currentNumStr != null && currentName[i] == '(')
+                currentNum = int.Parse(currentNumStr);
+
+            if (currentNum == -1) currentNum = 2;
+
+
+            currentName = currentName + $"({currentNum})";
+
+            return currentName;
         }
     }
 }

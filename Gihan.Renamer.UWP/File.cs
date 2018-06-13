@@ -1,6 +1,7 @@
 ﻿using System;
 using Gihan.Renamer.Core;
 using Windows.Storage;
+using NameCollisionOption = Gihan.Renamer.Core.Enums.NameCollisionOption;
 
 namespace Gihan.Renamer.UWP
 {
@@ -32,6 +33,11 @@ namespace Gihan.Renamer.UWP
 
         public void Move(IFolder destinationFolder, string desiredNewName,
             Core.Enums.NameCollisionOption option = Core.Enums.NameCollisionOption.FailIfExists)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RenameIgnoreExtension(string desiredName, NameCollisionOption option = NameCollisionOption.FailIfExists)
         {
             throw new NotImplementedException();
         }

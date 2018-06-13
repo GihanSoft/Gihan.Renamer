@@ -16,4 +16,8 @@
     <AssemblyName>Gihan.Renamer</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Gihan.Renamer.Core\Gihan.Renamer.Core.csproj" />
+  </ItemGroup>
+
 </Project>

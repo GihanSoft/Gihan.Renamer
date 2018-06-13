@@ -40,7 +40,7 @@ namespace Gihan.Renamer.Core.Base
         /// <summary>
         /// Deletes the current item.
         /// </summary>
-        void Delete(/*todo: add option for Recycle Bin*/);
+        void Delete();
 
     }
 }
