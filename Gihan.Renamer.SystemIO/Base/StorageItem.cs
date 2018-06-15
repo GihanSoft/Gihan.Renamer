@@ -8,23 +8,24 @@ namespace Gihan.Renamer.SystemIO.Base
 {
     public abstract class StorageItem : Core.Base.IStorageItem
     {
+        private IFolder _parent;
         protected System.IO.FileSystemInfo BaseStorageItem { get; }
 
         /// <summary>
         /// The full path of the item, if the item has a path.
         /// </summary>
         public string Path => BaseStorageItem.FullName.
-            Trim(SysPath.AltDirectorySeparatorChar, SysPath.DirectorySeparatorChar);
+            TrimEnd(SysPath.AltDirectorySeparatorChar, SysPath.DirectorySeparatorChar);
+
+        /// <summary>
+        /// The parent folder of the current storage item.
+        /// </summary>
+        public IFolder Parent => _parent ?? (_parent = new Folder(SysPath.GetDirectoryName(Path)));
 
         /// <summary>
         /// The name of the item including the file name extension if there is one.
         /// </summary>
         public string Name => SysPath.GetFileName(Path);
-
-        /// <summary>
-        /// The parent folder of the current storage item.
-        /// </summary>
-        public abstract IFolder Parent { get; }
 
         /// <summary>
         /// The <see cref="StorageItemType"/> of this item.
@@ -54,7 +55,7 @@ namespace Gihan.Renamer.SystemIO.Base
         ///     same as the name of an existing item in the current item's location.
         ///     Default value is "<see cref="NameCollisionOption.FailIfExists"/>".
         /// </param>
-        public abstract void Rename(string desiredName, 
+        public abstract void Rename(string desiredName,
             NameCollisionOption option = NameCollisionOption.FailIfExists);
 
         protected string NextName(string currentName)

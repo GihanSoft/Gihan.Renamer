@@ -2,21 +2,17 @@
 using System.IO;
 using Gihan.Renamer.Core;
 using Gihan.Renamer.Core.Enums;
+using Gihan.Renamer.SystemIO.Base;
 
+using SysIo = System.IO;
 using SysPath = System.IO.Path;
 
 namespace Gihan.Renamer.SystemIO
 {
     public class File : Base.StorageItem, IFile
     {
-        private IFolder _parent;
-
-        /// <summary>
-        /// The parent folder of the current storage item.
-        /// </summary>
-        public override IFolder Parent => _parent ?? (_parent = new Folder(BaseFile.Directory));
-
-        protected FileInfo BaseFile => (FileInfo)BaseStorageItem;
+        //protected FileInfo BaseFile => (FileInfo)BaseStorageItem;
+        protected new FileInfo BaseStorageItem => (FileInfo)base.BaseStorageItem;
 
         /// <summary>
         /// The <see cref="StorageItemType"/> of this item.
@@ -36,9 +32,9 @@ namespace Gihan.Renamer.SystemIO
         public File(FileInfo item) : base(item)
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
-            if(!item.Exists)
+            if (!item.Exists)
                 throw new ArgumentException("file is not exist", nameof(item));
-            if(Directory.Exists(item.FullName))
+            if (Directory.Exists(item.FullName))
                 throw new ArgumentException("this is a folder", nameof(item));
         }
 
@@ -56,10 +52,10 @@ namespace Gihan.Renamer.SystemIO
         ///     same as the name of an existing item in the current item's location.
         ///     Default value is "<see cref="NameCollisionOption.FailIfExists"/>".
         /// </param>
-        public override void Rename(string desiredName, 
+        public override void Rename(string desiredName,
             NameCollisionOption option = NameCollisionOption.FailIfExists)
         {
-            throw new NotImplementedException();
+            Move(Parent, desiredName, option);
         }
 
         /// <summary>
@@ -75,10 +71,10 @@ namespace Gihan.Renamer.SystemIO
         ///     same as the name of an existing item in the current item's location.
         ///     Default value is "<see cref="NameCollisionOption.FailIfExists"/>".
         /// </param>
-        public void RenameIgnoreExtension(string desiredName, 
+        public void RenameIgnoreExtension(string desiredName,
             NameCollisionOption option = NameCollisionOption.FailIfExists)
         {
-            throw new NotImplementedException();
+            Rename(desiredName + Extension, option);
         }
 
         /// <summary>
@@ -98,9 +94,10 @@ namespace Gihan.Renamer.SystemIO
         /// <see cref="IFile"/> that represents the copy
         ///     of the file created in the "<see cref="destinationFolder"/>".
         /// </returns>
-        public IFile Copy(IFolder destinationFolder, NameCollisionOption option)
+        public IFile Copy(IFolder destinationFolder,
+            NameCollisionOption option = NameCollisionOption.FailIfExists)
         {
-            throw new NotImplementedException();
+            return Copy(destinationFolder, Name, option);
         }
 
         /// <summary>
@@ -122,9 +119,30 @@ namespace Gihan.Renamer.SystemIO
         /// <see cref="IFile"/> that represents the copy
         ///     of the file created in the "<see cref="destinationFolder"/>".
         /// </returns>
-        public IFile Copy(IFolder destinationFolder, string desiredNewName, NameCollisionOption option)
+        public IFile Copy(IFolder destinationFolder, string desiredNewName,
+            NameCollisionOption option = NameCollisionOption.FailIfExists)
         {
-            throw new NotImplementedException();
+            var destFullPath = SysPath.Combine(destinationFolder.Path, desiredNewName);
+
+            switch (option)
+            {
+                case NameCollisionOption.GenerateUniqueName:
+                    if (Directory.Exists(destFullPath) || SysIo.File.Exists(destFullPath))
+                    {
+                        var pureName = SysPath.GetFileNameWithoutExtension(desiredNewName);
+                        var ex = SysPath.GetExtension(desiredNewName);
+                        pureName = NextName(pureName);
+                        return Copy(destinationFolder, pureName + ex, option);
+                    }
+                    else
+                        return new File(BaseStorageItem.CopyTo(destFullPath));
+                case NameCollisionOption.ReplaceExisting:
+                    return new File(BaseStorageItem.CopyTo(destFullPath, true));
+                case NameCollisionOption.FailIfExists:
+                    return new File(BaseStorageItem.CopyTo(destFullPath, false));
+                default:
+                    throw new ArgumentException("invalid option", nameof(option));
+            }
         }
 
         /// <summary>
@@ -138,9 +156,10 @@ namespace Gihan.Renamer.SystemIO
         /// An enum value that determines how responds if the name of current file is
         ///     the same as the name of an existing file in the destination folder.
         /// </param>
-        public void Move(IFolder destinationFolder, NameCollisionOption option)
+        public void Move(IFolder destinationFolder,
+            NameCollisionOption option = NameCollisionOption.FailIfExists)
         {
-            throw new NotImplementedException();
+            Move(destinationFolder, Name, option);
         }
 
         /// <summary>
@@ -158,9 +177,42 @@ namespace Gihan.Renamer.SystemIO
         /// An enum value that determines how responds if the "<see cref="desiredNewName"/>" is
         ///     the same as the name of an existing file in the destination folder.
         /// </param>
-        public void Move(IFolder destinationFolder, string desiredNewName, NameCollisionOption option)
+        public void Move(IFolder destinationFolder, string desiredNewName,
+            NameCollisionOption option = NameCollisionOption.FailIfExists)
         {
-            throw new NotImplementedException();
+            var destFullPath = SysPath.Combine(destinationFolder.Path, desiredNewName);
+
+            StorageItem item = null;
+            if (Directory.Exists(destFullPath))
+            {
+                item = new Folder(destFullPath);
+            }
+            else if (SysIo.File.Exists(destFullPath))
+            {
+                item = new File(destFullPath);
+            }
+
+            if (item != null)
+            {
+                switch (option)
+                {
+                    case NameCollisionOption.GenerateUniqueName:
+                        var pureName = SysPath.GetFileNameWithoutExtension(desiredNewName);
+                        var ex = SysPath.GetExtension(desiredNewName);
+                        pureName = NextName(pureName);
+                        Move(destinationFolder, pureName + ex, option);
+                        return;
+                    case NameCollisionOption.ReplaceExisting:
+                        item.Delete();
+                        break;
+                    case NameCollisionOption.FailIfExists:
+                        // System.IO default option. .net will throw exception
+                        break;
+                    default:
+                        throw new ArgumentException("invalid option", nameof(option));
+                }
+            }
+            BaseStorageItem.MoveTo(destFullPath);
         }
 
         /// <summary>
@@ -171,7 +223,7 @@ namespace Gihan.Renamer.SystemIO
         /// </param>
         public void Replace(IFile fileToReplace)
         {
-            throw new NotImplementedException();
+            Move(fileToReplace.Parent, fileToReplace.Name, NameCollisionOption.ReplaceExisting);
         }
     }
 }
