@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gihan.Renamer.Models;
 
-namespace Gihan.Renamer.Ex
+namespace Gihan.Renamer.Core.Ex
 {
     internal static class StringEx
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gihan.Renamer.Core.Enums
+namespace Gihan.Renamer.Core.Models.Enums
 {
     /// <summary>
     /// Describes whether an item that implements the IStorageItem interface is a file or a folder.

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Gihan.Renamer.Core;
-using Gihan.Renamer.Core.Base;
-using Gihan.Renamer.Core.Enums;
+using Gihan.Renamer.Core.Models;
+using Gihan.Renamer.Core.Models.Base;
+using Gihan.Renamer.Core.Models.Enums;
 using Gihan.Renamer.SystemIO.Base;
 
 using SysPath = System.IO.Path;

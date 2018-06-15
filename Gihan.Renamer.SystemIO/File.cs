@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using Gihan.Renamer.Core;
-using Gihan.Renamer.Core.Enums;
+using Gihan.Renamer.Core.Models;
+using Gihan.Renamer.Core.Models.Enums;
 using Gihan.Renamer.SystemIO.Base;
 
 using SysIo = System.IO;

@@ -122,10 +122,6 @@
       <Project>{8156dce9-82e6-43cf-b565-712f3e427bc2}</Project>
       <Name>Gihan.Renamer.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Renamer\Gihan.Renamer.csproj">
-      <Project>{b799b189-3e0a-4568-8633-6febbfe50ea6}</Project>
-      <Name>Gihan.Renamer</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

@@ -1,8 +1,8 @@
-﻿using Gihan.Renamer.Core.Base;
+﻿using Gihan.Renamer.Core.Models.Base;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Gihan.Renamer.Core
+namespace Gihan.Renamer.Core.Models
 {
     /// <inheritdoc />
     public interface IFolder : IStorageItem

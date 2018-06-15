@@ -1,12 +1,26 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Gihan.Renamer.Base;
-using Gihan.Renamer.Ex;
+﻿using Gihan.Renamer.Core.Models;
+using Gihan.Renamer.Core.Models.Base;
 using Gihan.Renamer.Models;
+using System.Collections.Generic;
 
-namespace Gihan.Renamer
+namespace Gihan.Renamer.Core
 {
+    public abstract class Renamer<FolderT, FileT, ItemT>
+        where FolderT : IFolder where FileT : IFile where ItemT : IStorageItem
+    {
+        public Renamer()
+        {
+
+        }
+
+        public abstract void RenameByRules(string dirPath, IEnumerable<RenameRule> renameRules);
+
+        public void Start(FolderT folder)
+        {
+            folder.GetFolders();
+        }
+    }
+    /*
     public class Renamer
     {
         private IStorageHelper StorageHelper { get; }
@@ -33,4 +47,5 @@ namespace Gihan.Renamer
             }
         }
     }
+    */
 }

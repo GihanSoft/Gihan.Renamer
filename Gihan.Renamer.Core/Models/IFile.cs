@@ -1,7 +1,7 @@
-﻿using Gihan.Renamer.Core.Base;
-using Gihan.Renamer.Core.Enums;
+﻿using Gihan.Renamer.Core.Models.Base;
+using Gihan.Renamer.Core.Models.Enums;
 
-namespace Gihan.Renamer.Core
+namespace Gihan.Renamer.Core.Models
 {
     /// <inheritdoc />
     public interface IFile : IStorageItem

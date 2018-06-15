@@ -1,6 +1,6 @@
-﻿using Gihan.Renamer.Core.Enums;
+﻿using Gihan.Renamer.Core.Models.Enums;
 
-namespace Gihan.Renamer.Core.Base
+namespace Gihan.Renamer.Core.Models.Base
 {
     public interface IStorageItem
     {

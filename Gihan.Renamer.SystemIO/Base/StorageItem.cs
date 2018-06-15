@@ -1,12 +1,12 @@
 ﻿using System.Linq;
-using Gihan.Renamer.Core;
-using Gihan.Renamer.Core.Enums;
+using Gihan.Renamer.Core.Models;
+using Gihan.Renamer.Core.Models.Enums;
 
 using SysPath = System.IO.Path;
 
 namespace Gihan.Renamer.SystemIO.Base
 {
-    public abstract class StorageItem : Core.Base.IStorageItem
+    public abstract class StorageItem : Core.Models.Base.IStorageItem
     {
         private IFolder _parent;
         protected System.IO.FileSystemInfo BaseStorageItem { get; }

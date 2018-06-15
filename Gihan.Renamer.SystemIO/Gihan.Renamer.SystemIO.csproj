@@ -5,14 +5,14 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <ApplicationIcon />
     <StartupObject />
-    <ApplicationIcon>..\Renamer\renameIcon.ico</ApplicationIcon>
+    <ApplicationIcon>..\renameIcon.ico</ApplicationIcon>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>Muhammad Babayi</Authors>
     <Company>GihanSoft</Company>
     <Copyright>Copyright (c) 2018 Mohammad Babayi</Copyright>
     <PackageLicenseUrl>https://raw.githubusercontent.com/chiefmb/Renamer/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/chiefmb/Renamer</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/chiefmb/Renamer/master/Renamer/renameIcon.ico</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/chiefmb/Renamer/master/renameIcon.ico</PackageIconUrl>
     <RepositoryUrl>https://github.com/chiefmb/Renamer</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Description>System.IO implementation for Gihan.Renamer.Core</Description>
@@ -20,8 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Gihan.Renamer.Core\Gihan.Renamer.Core.csproj" />
-    <ProjectReference Include="..\Renamer\Gihan.Renamer.csproj" />
-    <Content Include="..\Renamer\renameIcon.ico" Link="renameIcon.ico" />
+    <Content Include="..\renameIcon.ico" Link="renameIcon.ico" />
   </ItemGroup>
 
 </Project>
