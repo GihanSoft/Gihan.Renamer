@@ -14,6 +14,7 @@
     <ApplicationIcon>renameIcon.ico</ApplicationIcon>
     <PackageIconUrl>https://raw.githubusercontent.com/chiefmb/Renamer/master/Renamer/renameIcon.ico</PackageIconUrl>
     <AssemblyName>Gihan.Renamer</AssemblyName>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
