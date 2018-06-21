@@ -106,9 +106,6 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Base\StorageItem.cs" />
-    <Compile Include="File.cs" />
-    <Compile Include="Folder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Gihan.Renamer.UWP.rd.xml" />
   </ItemGroup>

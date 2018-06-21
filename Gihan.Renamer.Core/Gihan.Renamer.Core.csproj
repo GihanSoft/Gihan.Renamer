@@ -4,20 +4,26 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Muhammad Babayi</Authors>
     <Company>GihanSoft</Company>
-    <Description>base interfaces for Gihan.Renamer</Description>
+    <Description>base class for Gihan.Renamer
+this will help you rename a group of files with special pattern</Description>
     <Copyright>Copyright (c) 2018 Mohammad Babayi</Copyright>
     <PackageLicenseUrl>https://raw.githubusercontent.com/chiefmb/Renamer/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/chiefmb/Renamer</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/chiefmb/Renamer/master/renameIcon.ico</PackageIconUrl>
     <RepositoryUrl>https://github.com/chiefmb/Renamer</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
+    <RepositoryType>Git</RepositoryType>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <ApplicationIcon>..\renameIcon.ico</ApplicationIcon>
     <PackageId>Gihan.Renamer.Core</PackageId>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="..\renameIcon.ico" Link="renameIcon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Gihan.Storage.Core" Version="1.1.0" />
   </ItemGroup>
 
 </Project>

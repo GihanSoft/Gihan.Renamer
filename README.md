@@ -1,3 +1,3 @@
 # Renamer
-helper classes for rename files and folders multi-platform + special pattern for rename.
-Code is not Completed. so no readme yet.
+helper classes for rename a group of files and folders multi-platform + special pattern for rename.
+Rename will come soon.
