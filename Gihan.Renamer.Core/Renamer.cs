@@ -130,13 +130,17 @@ namespace Gihan.Renamer
 
         public static void Rename(IFile file, IEnumerable<RenameRule> rules, bool includeExtension = false)
         {
-            if (includeExtension)
+            string currentName;
+            string destName;
+            currentName = includeExtension ? file.Name : file.PureName;
+            destName = currentName.ReplaceRules(rules);
+
+            if (destName != currentName)
             {
-                file.Rename(file.Name.ReplaceRules(rules));
-            }
-            else
-            {
-                file.RenameIgnoreExtension(file.PureName.ReplaceRules(rules));
+                if (includeExtension)
+                    file.Rename(destName);
+                else
+                    file.RenameIgnoreExtension(destName);
             }
         }
     }

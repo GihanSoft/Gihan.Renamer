@@ -17,7 +17,7 @@
     <RepositoryType>Git</RepositoryType>
     <Description>System.IO implementation for Gihan.Renamer.Core
 just simplfy Gihan.Renamer use.</Description>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

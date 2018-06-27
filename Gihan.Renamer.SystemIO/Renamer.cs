@@ -7,7 +7,7 @@ namespace Gihan.Renamer.SystemIO
 {
     public class Renamer : Gihan.Renamer.Renamer
     {
-        public Renamer(Folder folder, IEnumerable<RenameRule> renameRules, bool includeExtension = false) 
+        public Renamer(Folder folder, IEnumerable<RenameRule> renameRules, bool includeExtension = false)
             : base(folder, renameRules, includeExtension)
         {
         }
@@ -19,27 +19,13 @@ namespace Gihan.Renamer.SystemIO
 
         public static void Rename(File file, IEnumerable<RenameRule> rules, bool includeExtension = false)
         {
-            if (includeExtension)
-            {
-                file.Rename(file.Name.ReplaceRules(rules));
-            }
-            else
-            {
-                file.RenameIgnoreExtension(file.PureName.ReplaceRules(rules));
-            }
+            Gihan.Renamer.Renamer.Rename(file, rules, includeExtension);
         }
 
         public static void Rename(string filePath, IEnumerable<RenameRule> rules, bool includeExtension = false)
         {
             var file = new File(filePath);
-            if (includeExtension)
-            {
-                file.Rename(file.Name.ReplaceRules(rules));
-            }
-            else
-            {
-                file.RenameIgnoreExtension(file.PureName.ReplaceRules(rules));
-            }
+            Rename(file, rules, includeExtension);
         }
     }
 }
