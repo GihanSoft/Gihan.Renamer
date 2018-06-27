@@ -72,24 +72,23 @@ namespace Gihan.Renamer
                 {
                     if (Paused) break;
                     var itemToRename = ItemsToRename[RenamedCount];
-                    var destName = itemToRename.Name;
+                    string currentName;
                     if (itemToRename.Type == StorageItemType.File && !IncludeExtension)
-                    {
-                        destName = (itemToRename as IFile).PureName;
-                    }
-                    destName = destName.ReplaceRules(RenameRules);
+                        currentName = (itemToRename as IFile).PureName;
+                    else
+                        currentName = itemToRename.Name;
+                    var destName = currentName.ReplaceRules(RenameRules);
                     var log = new RenameLog()
                     {
                         Before = itemToRename.Path,
                         DateTime = DateTime.Now,
                     };
-                    if (itemToRename.Type == StorageItemType.File && !IncludeExtension)
+                    if (destName != currentName)
                     {
-                        (itemToRename as IFile).RenameIgnoreExtension(destName);
-                    }
-                    else
-                    {
-                        itemToRename.Rename(destName);
+                        if (itemToRename.Type == StorageItemType.File && !IncludeExtension)
+                            (itemToRename as IFile).RenameIgnoreExtension(destName);
+                        else
+                            itemToRename.Rename(destName);
                     }
                     log.After = itemToRename.Path;
                     InnerLogList.Add(log);
@@ -104,6 +103,10 @@ namespace Gihan.Renamer
             InnerLogList.Clear();
             Analized = false;
             await Analize(RootFolder);
+            if (ItemsToRename.Last().Path == RootFolder.Path)
+            {
+                ItemsToRename.RemoveAt(ItemsToRename.Count - 1);
+            }
             Analized = true;
             await Rename();
         }
