@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using Gihan.Renamer.Models;
 using Gihan.Storage.SystemIO;
-using Gihan.Renamer.Ex;
 
 namespace Gihan.Renamer.SystemIO
 {
-    public class Renamer : Gihan.Renamer.Renamer
+    public class Renamer : Core.Renamer
     {
         public Renamer(Folder folder, IEnumerable<RenameRule> renameRules, bool includeExtension = false)
             : base(folder, renameRules, includeExtension)
@@ -19,7 +18,7 @@ namespace Gihan.Renamer.SystemIO
 
         public static void Rename(File file, IEnumerable<RenameRule> rules, bool includeExtension = false)
         {
-            Gihan.Renamer.Renamer.Rename(file, rules, includeExtension);
+            Gihan.Renamer.Core.Renamer.Rename(file, rules, includeExtension);
         }
 
         public static void Rename(string filePath, IEnumerable<RenameRule> rules, bool includeExtension = false)

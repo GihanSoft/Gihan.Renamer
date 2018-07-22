@@ -7,15 +7,16 @@
     <Description>base class for Gihan.Renamer
 this will help you rename a group of files with special pattern</Description>
     <Copyright>Copyright (c) 2018 Mohammad Babayi</Copyright>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/chiefmb/Renamer/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/chiefmb/Renamer</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/chiefmb/Renamer/master/renameIcon.ico</PackageIconUrl>
-    <RepositoryUrl>https://github.com/chiefmb/Renamer</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/chiefmb/Gihan.Renamer/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/chiefmb/Gihan.Renamer</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/chiefmb/Gihan.Renamer/master/renameIcon.ico</PackageIconUrl>
+    <RepositoryUrl>https://github.com/chiefmb/Gihan.Renamer</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <ApplicationIcon>..\renameIcon.ico</ApplicationIcon>
     <PackageId>Gihan.Renamer.Core</PackageId>
-    <Version>1.3.0</Version>
+    <Version>1.4.0</Version>
+    <RootNamespace>Gihan.Renamer</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +24,11 @@ this will help you rename a group of files with special pattern</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Gihan.Storage.Core" Version="1.1.0" />
+    <PackageReference Include="Gihan.Storage.Core" Version="1.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gihan.Helpers.StringHelper.Replaces\Gihan.Helpers.String.Replacer.csproj" />
   </ItemGroup>
 
 </Project>

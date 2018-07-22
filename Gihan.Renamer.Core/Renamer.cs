@@ -6,142 +6,273 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Gihan.Storage.Core.Enums;
-using Gihan.Renamer.Ex;
 using System.Threading;
+using Gihan.Helpers.String;
 
-namespace Gihan.Renamer
+using SysPath = System.IO.Path;
+
+// ReSharper disable once CheckNamespace
+namespace Gihan.Renamer.Core
 {
     public class Renamer
     {
-        private bool WhileIsRunning { get; set; }
-        private bool Analized { get; set; }
-        private List<RenameLog> InnerLogList { get; set; }
-        protected IFolder RootFolder { get; private set; }
-        protected List<IStorageItem> ItemsToRename { get; private set; }
-        protected RenameRule[] RenameRules { get; private set; }
-        public bool Paused { get; protected set; }
+        private enum RunStatus : byte
+        {
+            Stoped,
+            Preparing,
+            Prepared,
+            Pausing,
+            Paused,
+            Running,
+        }
 
-        public bool IncludeExtension { get; }
+        private RunStatus Status { get; set; }
+        protected IFolder RootFolder { get; }
+        protected RenameRule[] RenameRules { get; }
+        protected RenameFlags Flags { get; }
+
+        protected List<IStorageItem> ItemsToRename { get; }
+
+        private List<RenameLog> InnerLogList { get; }
         public IReadOnlyList<RenameLogReadOnly> LogList =>
                 InnerLogList.Cast<RenameLogReadOnly>().ToList().AsReadOnly();
-        public int RenamedCount => InnerLogList.Count;
+
+
+        private int RenameCounter { get; set; }
+        public int RenamedCount => RenameCounter;
         public int TrueRenamedCount
         {
             get
             {
-                int count = 0;
+                var count = 0;
                 foreach (var item in InnerLogList)
                 {
-                    if (item.Before != item.After) count++;
+                    if (item.DateTime != null && item.Before != item.After) count++;
                 }
                 return count;
             }
         }
 
-        public Renamer(IFolder folder, IEnumerable<RenameRule> renameRules, bool includeExtension = false)
+        public event EventHandler<IReadOnlyList<RenameLogReadOnly>> Prepared;
+        public event EventHandler<RenameLogReadOnly> FileRenamed;
+        public event EventHandler<IReadOnlyList<RenameLogReadOnly>> Renamed;
+
+        public event EventHandler<Exception> ExceptionThrowed;
+
+        public Renamer(
+            IFolder folder
+            , IEnumerable<RenameRule> renameRules
+            //, bool includeExtension = false
+            , RenameFlags flags = RenameFlags.Default
+            )
         {
-            WhileIsRunning = false;
-            Analized = false;
+            Status = RunStatus.Stoped;
             RootFolder = folder;
-            Paused = false;
-            IncludeExtension = includeExtension;
             RenameRules = renameRules.ToArray();
-            InnerLogList = new List<RenameLog>();
+            Flags = flags;
             ItemsToRename = new List<IStorageItem>();
+            InnerLogList = new List<RenameLog>();
+            RenameCounter = -1;
+
+            Prepare();
         }
 
-        private async Task Analize(IFolder folder)
+        /// <summary>
+        /// Prepare every thing for renaming.
+        /// Finding items for rename and produce new names for them
+        /// </summary>
+        private async void Prepare()
+        {
+            if (Status != RunStatus.Stoped) return;
+            Status = RunStatus.Preparing;
+            await Find(RootFolder);
+            await Process();
+            Status = RunStatus.Prepared;
+            Prepared?.Invoke(this, LogList);
+        }
+
+        /// <summary>
+        /// Find items for renaming and add them in <see cref="ItemsToRename"/>
+        /// </summary>
+        /// <param name="folder">
+        /// Folder to search in it for items
+        /// </param>
+        /// <returns>nothing</returns>
+        private async Task Find(IFolder folder)
         {
             await Task.Run(async () =>
             {
-                ItemsToRename.AddRange(folder.GetFiles());
-                foreach (var item in folder.GetFolders())
+                try
                 {
-                    await Analize(item);
+                    ItemsToRename.AddRange(folder.GetFiles());
+                    if (Flags.HasFlag(RenameFlags.SubFolders))
+                    {
+                        foreach (var item in folder.GetFolders())
+                        {
+                            await Find(item);
+                            if (Flags.HasFlag(RenameFlags.Folder))
+                                ItemsToRename.Add(item);
+                        }
+                    }
                 }
-                ItemsToRename.Add(folder);
+                catch (Exception err)
+                {
+                    ExceptionThrowed?.Invoke(this, err);
+                }
             });
-        }
+        } //done
+
+        /// <summary>
+        /// Produce new name for items.
+        /// </summary>
+        /// <returns>no thing</returns>
+        private async Task Process()
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    foreach (var storageItem in ItemsToRename)
+                    {
+                        var log = new RenameLog();
+                        try
+                        {
+                            log.Before = storageItem.Path;
+                            string currentName;
+                            if (storageItem.Type == StorageItemType.Folder ||
+                                Flags.HasFlag(RenameFlags.Extension))
+                            {
+                                currentName = storageItem.Name;
+                            }
+                            else
+                            {
+                                currentName = (storageItem as IFile)?.PureName;
+                            }
+
+                            var patterns = RenameRules.Select(r => r.ToTuple());
+                            var destName = currentName.Replaces(patterns);
+
+                            var destPath = SysPath.Combine(storageItem.Parent.Path, destName);
+                            if (!Flags.HasFlag(RenameFlags.Extension) &&
+                                storageItem.Type == StorageItemType.File)
+                            {
+                                destPath += (storageItem as IFile)?.Extension;
+                            }
+
+                            var destExist = storageItem.CheckExist(destPath);
+                            var destWillExist = InnerLogList.Any(l => l.After == destPath);
+                            
+                            if (destExist)
+                                throw new Exception("A item with same name exist");
+
+                            if (destWillExist)
+                                throw new Exception("there is another item that name of it will be same");
+                                
+                            log.After = destPath;
+                        }
+                        catch (Exception err)
+                        {
+                            log.After = nameof(Exception) + " : " + err.Message;
+                            ExceptionThrowed?.Invoke(this, err);
+                        }
+                        InnerLogList.Add(log);
+                    }
+                }
+                catch (Exception err)
+                {
+                    ExceptionThrowed?.Invoke(this, err);
+                }
+            });
+        }//done
 
         private async Task Rename()
         {
             await Task.Run(() =>
             {
-                WhileIsRunning = true;
-                while (RenamedCount < ItemsToRename.Count)
+                try
                 {
-                    if (Paused) break;
-                    var itemToRename = ItemsToRename[RenamedCount];
-                    string currentName;
-                    if (itemToRename.Type == StorageItemType.File && !IncludeExtension)
-                        currentName = (itemToRename as IFile).PureName;
-                    else
-                        currentName = itemToRename.Name;
-                    var destName = currentName.ReplaceRules(RenameRules);
-                    var log = new RenameLog()
+                    Status = RunStatus.Running;
+                    for (var log = InnerLogList[RenameCounter]; RenameCounter < ItemsToRename.Count; 
+                            RenameCounter++, 
+                            log.DateTime = DateTime.Now,
+                            FileRenamed?.Invoke(this, (RenameLogReadOnly)InnerLogList[RenameCounter]))
                     {
-                        Before = itemToRename.Path,
-                        DateTime = DateTime.Now,
-                    };
-                    if (destName != currentName)
-                    {
-                        if (itemToRename.Type == StorageItemType.File && !IncludeExtension)
-                            (itemToRename as IFile).RenameIgnoreExtension(destName);
-                        else
-                            itemToRename.Rename(destName);
+                        if (Status == RunStatus.Pausing)
+                        {
+                            Status = RunStatus.Paused;
+                            break;
+                        }
+                        
+                        if(log.Before == log.After) continue;
+                        if(log.After.StartsWith(nameof(Exception))) continue;
+
+                        try
+                        {
+                            var destName = SysPath.GetFileName(log.After);
+                            var item = ItemsToRename[RenameCounter];
+
+                            item.Rename(destName);
+
+
+
+                        }
+                        catch (Exception err)
+                        {
+                            log.After = nameof(Exception) + " : " + err.Message;
+                            ExceptionThrowed?.Invoke(this, err);
+                        }
+                        //todo : complete
                     }
-                    log.After = itemToRename.Path;
-                    InnerLogList.Add(log);
                 }
-                WhileIsRunning = false;
+                catch (Exception err)
+                {
+                    ExceptionThrowed?.Invoke(this, err);
+                }
             });
-        }
+        }//done
+
+        //todo : add status conditions for below fuctions
 
         public async void Start()
         {
-            ItemsToRename.Clear();
-            InnerLogList.Clear();
-            Analized = false;
-            await Analize(RootFolder);
-            if (ItemsToRename.Last().Path == RootFolder.Path)
+            while (Status == RunStatus.Preparing)
             {
-                ItemsToRename.RemoveAt(ItemsToRename.Count - 1);
+                Thread.Sleep(10);
             }
-            Analized = true;
+
             await Rename();
+
+            //event
+            if (Status == RunStatus.Paused) return;
+
+            Renamed?.Invoke(this, LogList);
+            Status = RunStatus.Stoped;
         }
+
         public void Pause()
         {
-            Paused = true;
-            while (WhileIsRunning) Thread.Sleep(1);
+            Status = RunStatus.Pausing;
+            while (Status != RunStatus.Paused) Thread.Sleep(10);
         }
-        public async void Remuse()
-        {
-            Paused = false;
-            if (Analized)
-                await Rename();
-        }
+
         public void Stop()
         {
-            Paused = true;
-            while (WhileIsRunning) Thread.Sleep(1);
-            ItemsToRename.Clear();
+            Pause();
+
+            Status = RunStatus.Stoped;
         }
 
         public static void Rename(IFile file, IEnumerable<RenameRule> rules, bool includeExtension = false)
         {
-            string currentName;
-            string destName;
-            currentName = includeExtension ? file.Name : file.PureName;
-            destName = currentName.ReplaceRules(rules);
+            var currentName = includeExtension ? file.Name : file.PureName;
+            var patterns = rules.Select(r => new Tuple<string, string>(r.From, r.To));
+            var destName = currentName.Replaces(patterns);
 
-            if (destName != currentName)
-            {
-                if (includeExtension)
-                    file.Rename(destName);
-                else
-                    file.RenameIgnoreExtension(destName);
-            }
+            if (destName == currentName) return;
+            if (includeExtension)
+                file.Rename(destName);
+            else
+                file.RenameIgnoreExtension(destName);
         }
     }
 }

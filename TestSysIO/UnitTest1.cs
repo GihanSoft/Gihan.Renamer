@@ -1,6 +1,5 @@
 using Gihan.Renamer.Models;
 using Gihan.Renamer.SystemIO;
-using System;
 using Xunit;
 
 namespace TestSysIO

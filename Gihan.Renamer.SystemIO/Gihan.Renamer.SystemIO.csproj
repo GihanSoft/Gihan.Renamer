@@ -17,7 +17,7 @@
     <RepositoryType>Git</RepositoryType>
     <Description>System.IO implementation for Gihan.Renamer.Core
 just simplfy Gihan.Renamer use.</Description>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,7 +26,7 @@ just simplfy Gihan.Renamer use.</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Gihan.Storage.SystemIO" Version="1.1.1" />
+    <PackageReference Include="Gihan.Storage.SystemIO" Version="1.3.3" />
   </ItemGroup>
 
 </Project>
