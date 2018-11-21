@@ -3,16 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Gihan.Helpers.String</RootNamespace>
-    <Version>1.1.1</Version>
+    <Version>1.2.0</Version>
     <Authors>Muhammad Babayi</Authors>
     <Company>Gihan Soft</Company>
     <Description>this package provide a simple way to change a string with special patterns</Description>
     <Copyright>Copyright (c) 2018 Mohammad Babayi</Copyright>
     <PackageProjectUrl>https://github.com/chiefmb/Gihan.Renamer</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/chiefmb/Gihan.Renamer/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/chiefmb/Gihan.Renamer/master/renameIcon.ico</PackageIconUrl>
+    <PackageIconUrl></PackageIconUrl>
     <RepositoryUrl>https://github.com/chiefmb/Gihan.Renamer</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>string</PackageTags>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
 </Project>

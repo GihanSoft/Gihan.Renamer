@@ -17,21 +17,21 @@ namespace Gihan.Helpers.String
             NumericAlgo
         }
 
-        private static string ReplaceNormal(this string src, Tuple<string, string> pattern)
+        private static string ReplaceNormal(this string src, ReplacePattern pattern)
         {
             //validations
-            if (string.IsNullOrEmpty(pattern.Item1))
+            if (string.IsNullOrEmpty(pattern.From))
                 throw new Exception("It's imposible replace nothing with any thing");
 
-            return src.Replace(pattern.Item1, pattern.Item2);
+            return src.Replace(pattern.From, pattern.To);
         }
 
         private static string ReplaceAlgo(this string src,
-                                          int jokerIndexFrom, /*int jokerIndexTo, */
-                                          string fromPattern, string toPattern)
+                                          int jokerIndexFrom, // get from super method to optimize
+                                          ReplacePattern pattern)
         {
-            var algoFromParts = fromPattern.Split(Joker);
-            var algoToParts = toPattern.Split(Joker);
+            var algoFromParts = pattern.From.Split(Joker);
+            var algoToParts = pattern.To.Split(Joker);
 
             if (!src.StartsWith(algoFromParts.First()) || !src.EndsWith(algoFromParts.Last()))
                 return src;
@@ -49,7 +49,7 @@ namespace Gihan.Helpers.String
         }
 
         //--## numeric algo ##----------------------------------------------------------
-        private static Tuple<string, string> _prePattern;
+        private static ReplacePattern _prePattern;
         private static int? _preNum;
         private static string _numFormat;
 
@@ -61,43 +61,44 @@ namespace Gihan.Helpers.String
 
         private static string ReplaceNumericAlgo(this string src,
                                                  int numStartFlagIndex, int numEndFlagIndex,
-                                                 string fromPattern, string toPattern)
+                                                 ReplacePattern pattern)
         {
-            var algoFromParts = fromPattern.Split(Joker);
+            if (pattern.From is null || pattern.To is null)
+                throw new ArgumentNullException();
+            var algoFromParts = pattern.From.Split(Joker);
             if (!src.StartsWith(algoFromParts.First()) || !src.EndsWith(algoFromParts.Last()))
                 return src;
 
-            if (fromPattern != _prePattern?.Item1 || toPattern != _prePattern?.Item2)
+            if (pattern.From != _prePattern?.From || pattern.To != _prePattern?.To)
                 ResetNumeric();
 
             if (_preNum is null || _numFormat is null)
             {
                 var numLength = numEndFlagIndex - numStartFlagIndex - 1;
-                var numPart = toPattern.Substring(numStartFlagIndex + 1, numLength);
+                var numPart = pattern.To.Substring(numStartFlagIndex + 1, numLength);
                 if (numPart.Any(ch => !char.IsDigit(ch)))
                     throw new Exception("you must put a integer number " +
                         $"between '{NumStartFlag}' and '{NumEndFlag}'");
                 _preNum = int.Parse(numPart) - 1;
-                _numFormat = "D" + numLength;
+                _numFormat = $"D{numLength}";
             }
-            _prePattern = new Tuple<string, string>(fromPattern, toPattern);
+            _prePattern = pattern;
 
-            var before = toPattern.Split(NumStartFlag).First();
-            var after = toPattern.Split(NumEndFlag).Last();
+            var before = pattern.To.Split(NumStartFlag).First();
+            var after = pattern.To.Split(NumEndFlag).Last();
 
             return before + (++_preNum).Value.ToString(_numFormat) + after;
         }
 
-        public static string Replace(this string src, Tuple<string, string> pattern)
+        public static string Replace(this string src, ReplacePattern pattern)
         {
             ReplaceType replaceType;
 
             // find Joker ('*') in ``From``
             var jokerIndex = -1;
-            for (var i = 0; i < pattern.Item1.Length; i++)
+            for (var i = 0; i < pattern.From.Length; i++)
             {
-                var ch = pattern.Item1[i];
-                if (ch != Joker) continue;
+                if (pattern.From[i] != Joker) continue;
                 if (jokerIndex == -1) jokerIndex = i;
                 else throw new Exception($"There is two '{Joker}' in From");
             }
@@ -106,9 +107,9 @@ namespace Gihan.Helpers.String
             var numStartFlagIndex = -1;
             var numEndFlagIndex = -1;
             var joker2Index = -1;
-            for (var i = 0; i < pattern.Item2.Length; i++)
+            for (var i = 0; i < pattern.To.Length; i++)
             {
-                var ch = pattern.Item2[i];
+                var ch = pattern.To[i];
                 switch (ch)
                 {
                     case Joker:
@@ -176,7 +177,7 @@ namespace Gihan.Helpers.String
                         throw new Exception($"There is a '{Joker}' in 'to' of NumericAlgo replace");
                     break;
                 default:
-                    throw new Exception(@":\");
+                    throw new Exception("!!!");
             }
 
             switch (replaceType)
@@ -184,15 +185,24 @@ namespace Gihan.Helpers.String
                 case ReplaceType.Normal:
                     return ReplaceNormal(src, pattern);
                 case ReplaceType.Algo:
-                    return ReplaceAlgo(src, jokerIndex, /*joker2Index,*/ pattern.Item1, pattern.Item2);
+                    return ReplaceAlgo(src, jokerIndex, pattern);
                 case ReplaceType.NumericAlgo:
-                    return ReplaceNumericAlgo(src, numStartFlagIndex, numEndFlagIndex,
-                                              pattern.Item1, pattern.Item2);
+                    return ReplaceNumericAlgo(src, numStartFlagIndex, numEndFlagIndex, pattern);
                 default:
                     throw new Exception(@":\");
             }
         }
+        public static string Replaces(this string src, IEnumerable<ReplacePattern> patterns)
+        {
+            return patterns.Aggregate(src, (current, pattern) => current.Replace(pattern));
+        }
+
         public static string Replaces(this string src, IEnumerable<Tuple<string, string>> patterns)
+        {
+            return patterns.Aggregate(src, (current, pattern) => current.Replace(pattern));
+        }
+
+        public static string Replaces(this string src, IEnumerable<(string, string)> patterns)
         {
             return patterns.Aggregate(src, (current, pattern) => current.Replace(pattern));
         }

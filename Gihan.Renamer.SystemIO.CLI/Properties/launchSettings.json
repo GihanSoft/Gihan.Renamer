@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Gihan.Renamer.SystemIO.CLI": {
+      "commandName": "Project",
+      "commandLineArgs": "-r -f 1 -o [{\"FilePath\":\"'D:\\WorkSpace\\New folder\\TEMP.txt'\",\"NewName\":\"TEMP.hxh\"}]"
+    }
+  }
+}

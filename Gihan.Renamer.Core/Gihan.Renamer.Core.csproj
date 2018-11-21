@@ -24,11 +24,13 @@ this will help you rename a group of files with special pattern</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Gihan.Storage.Core" Version="1.2.1" />
+    <PackageReference Include="Gihan.Storage.Core" Version="1.4.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Gihan.Helpers.StringHelper.Replaces\Gihan.Helpers.String.Replacer.csproj" />
+    <ProjectReference Include="..\Gihan.Helpers.String.Replacer\Gihan.Helpers.String.Replacer.csproj" />
   </ItemGroup>
 
 </Project>
