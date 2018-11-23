@@ -1,27 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-    <ApplicationIcon />
-    <StartupObject />
-    <ApplicationIcon>..\renameIcon.ico</ApplicationIcon>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Muhammad Babayi</Authors>
     <Company>GihanSoft</Company>
+    <Description>System.IO implementation for Gihan.Renamer.Core
+</Description>
     <Copyright>Copyright (c) 2018 Mohammad Babayi</Copyright>
     <PackageLicenseUrl>https://raw.githubusercontent.com/chiefmb/Renamer/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/chiefmb/Renamer</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/chiefmb/Renamer/master/renameIcon.ico</PackageIconUrl>
     <RepositoryUrl>https://github.com/chiefmb/Renamer</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
-    <Description>System.IO implementation for Gihan.Renamer.Core
-just simplfy Gihan.Renamer use.</Description>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <ApplicationIcon>..\renameIcon.ico</ApplicationIcon>
+    <PackageId>Gihan.Renamer.SystemIO</PackageId>
     <Version>1.2.1</Version>
+    <RootNamespace>Gihan.Renamer.SystemIO</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Gihan.Renamer.Core\Gihan.Renamer.Core.csproj" />
     <Content Include="..\renameIcon.ico" Link="renameIcon.ico" />
   </ItemGroup>
 
@@ -29,4 +27,7 @@ just simplfy Gihan.Renamer use.</Description>
     <PackageReference Include="Gihan.Storage.SystemIO" Version="1.4.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Gihan.Renamer.Core\Gihan.Renamer.Core.csproj" />
+  </ItemGroup>
 </Project>
