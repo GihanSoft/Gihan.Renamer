@@ -11,15 +11,17 @@ namespace TestSysIO
         [Fact]
         public void Test1()
         {
-            var x = new RenameProcessor();
-            var rootFolderPath = @"D:\WorkSpace\New folder";
-            
-           var rr = x.ProcessReplace(rootFolderPath, new[] { new ReplacePattern { From = "t", To = "h" } }, RenameFlags.Default);
-
-            var y = new Renamer();
-            y.Rename(rr, RenameFlags.Default);
-            var db = new Db();
-            var arr = db.Renames.ToArray();
+            var src = "this is a text";
+            src = src.Replaces(new[] { ("this", "This"), ("*text", "*TEXT") });
+            Assert.Equal("This is a TEXT", src);
+            src = src.Replace(("*", "This Is <001> TEXT"));
+            src = src.Replace(("*", "This Is <001> TEXT"));
+            src = src.Replace(("*", "This Is <001> TEXT"));
+            Assert.Equal("This Is 003 TEXT", src);
+            src = src.Replace(("*", "This Is <-05> Text"));
+            src = src.Replace(("*", "This Is <-05> Text"));
+            src = src.Replace(("*", "This Is <-05> Text"));
+            Assert.Equal("This Is -03 Text", src);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Gihan.Helpers.String
         {
             //validations
             if (string.IsNullOrEmpty(pattern.From))
-                throw new Exception("It's imposible replace nothing with any thing");
+                throw new Exception("It's impossible replace nothing with any thing");
 
             return src.Replace(pattern.From, pattern.To);
         }
@@ -48,7 +48,7 @@ namespace Gihan.Helpers.String
             return algoToParts.First() + constPart + algoToParts.Last();
         }
 
-        //--## numeric algo ##----------------------------------------------------------
+        //--## numeric Algo ##----------------------------------------------------------
         private static ReplacePattern _prePattern;
         private static int? _preNum;
         private static string _numFormat;
@@ -76,11 +76,11 @@ namespace Gihan.Helpers.String
             {
                 var numLength = numEndFlagIndex - numStartFlagIndex - 1;
                 var numPart = pattern.To.Substring(numStartFlagIndex + 1, numLength);
-                if (numPart.Any(ch => !char.IsDigit(ch)))
+                if (!int.TryParse(numPart, out int num))
                     throw new Exception("you must put a integer number " +
-                        $"between '{NumStartFlag}' and '{NumEndFlag}'");
-                _preNum = int.Parse(numPart) - 1;
-                _numFormat = $"D{numLength}";
+                                            $"between '{NumStartFlag}' and '{NumEndFlag}'");
+                _preNum = num - 1;
+                _numFormat = "D" + (numLength - (num < 0 ? 1 : 0));
             }
             _prePattern = pattern;
 
@@ -98,9 +98,12 @@ namespace Gihan.Helpers.String
             var jokerIndex = -1;
             for (var i = 0; i < pattern.From.Length; i++)
             {
-                if (pattern.From[i] != Joker) continue;
-                if (jokerIndex == -1) jokerIndex = i;
-                else throw new Exception($"There is two '{Joker}' in From");
+                if (pattern.From[i] != Joker)
+                    continue;
+                if (jokerIndex == -1)
+                    jokerIndex = i;
+                else
+                    throw new Exception($"There is two '{Joker}' in From");
             }
 
             // find '*' or '<' and '>' in ``To``
@@ -113,16 +116,22 @@ namespace Gihan.Helpers.String
                 switch (ch)
                 {
                     case Joker:
-                        if (joker2Index == -1) joker2Index = i;
-                        else throw new Exception($"There is two '{Joker}' in From");
+                        if (joker2Index == -1)
+                            joker2Index = i;
+                        else
+                            throw new Exception($"There is two '{Joker}' in From");
                         break;
                     case NumStartFlag:
-                        if (numStartFlagIndex == -1) numStartFlagIndex = i;
-                        else throw new Exception($"There is two '{NumStartFlag}' in From");
+                        if (numStartFlagIndex == -1)
+                            numStartFlagIndex = i;
+                        else
+                            throw new Exception($"There is two '{NumStartFlag}' in From");
                         break;
                     case NumEndFlag:
-                        if (numEndFlagIndex == -1) numEndFlagIndex = i;
-                        else throw new Exception($"There is two '{NumEndFlag}' in From");
+                        if (numEndFlagIndex == -1)
+                            numEndFlagIndex = i;
+                        else
+                            throw new Exception($"There is two '{NumEndFlag}' in From");
                         break;
                 }
             }
@@ -143,21 +152,21 @@ namespace Gihan.Helpers.String
             {
                 case ReplaceType.Normal:
                     if (numStartFlagIndex != -1)
-                        throw new Exception($"There is a '{numStartFlagIndex}' in Normal replace");
+                        throw new Exception($"There is a '{NumStartFlag}' in Normal replace");
                     if (numEndFlagIndex != -1)
-                        throw new Exception($"There is a '{numEndFlagIndex}' in Normal replace");
+                        throw new Exception($"There is a '{NumEndFlag}' in Normal replace");
                     if (joker2Index != -1)
                         throw new Exception($"There is a '{Joker}' in Normal replace");
-                    //imposible
+                    //impossible
                     if (jokerIndex != -1)
                         throw new Exception($"There is a '{Joker}' in Normal replace");
                     break;
                 case ReplaceType.Algo:
                     if (numStartFlagIndex != -1)
-                        throw new Exception($"There is a '{numStartFlagIndex}' in Algi replace");
+                        throw new Exception($"There is a '{numStartFlagIndex}' in Algo replace");
                     if (numEndFlagIndex != -1)
                         throw new Exception($"There is a '{numEndFlagIndex}' in Algo replace");
-                    //imposible
+                    //impossible
                     if (jokerIndex == -1)
                         throw new Exception($"There is no '{Joker}' in 'from' of Algo replace");
                     if (joker2Index == -1)
@@ -166,7 +175,7 @@ namespace Gihan.Helpers.String
                 case ReplaceType.NumericAlgo:
                     if (numStartFlagIndex > numEndFlagIndex)
                         throw new Exception($"'{NumStartFlag}' must be after '{NumEndFlag}'");
-                    //imposible
+                    //impossible
                     if (numStartFlagIndex == -1)
                         throw new Exception($"There is no '{numStartFlagIndex}' in NumericAlgi replace");
                     if (numEndFlagIndex == -1)
@@ -189,7 +198,7 @@ namespace Gihan.Helpers.String
                 case ReplaceType.NumericAlgo:
                     return ReplaceNumericAlgo(src, numStartFlagIndex, numEndFlagIndex, pattern);
                 default:
-                    throw new Exception(@":\");
+                    throw new Exception("what the phase dude? :/");
             }
         }
         public static string Replaces(this string src, IEnumerable<ReplacePattern> patterns)

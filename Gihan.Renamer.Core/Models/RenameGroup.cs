@@ -1,18 +1,13 @@
 ﻿using Gihan.Renamer.Models.Enums;
-using SQLite;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Gihan.Renamer.Models
 {
-    [Table("RenameGroup")]
-    public class RenameGroupEntity
+    public class RenameGroup
     {
-        [PrimaryKey, AutoIncrement]
         public long Id { get; set; }
         public DateTime DateTime { get; set; }
-        [NotNull]
-        public RenameFlags RenameFlags { get; set; }
+        public IEnumerable<RenameOrder> Renames { get; set; }
     }
 }

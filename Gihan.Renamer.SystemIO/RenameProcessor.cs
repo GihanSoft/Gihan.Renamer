@@ -13,8 +13,8 @@ namespace Gihan.Renamer.SystemIO
         protected override StorageHelper StorageHelper { get; }
         public RenameProcessor()
         {
-            Storage.SystemIO.Base.StorageHelper.Init();
-            StorageHelper = StorageHelper.Creat(); //to init as SysIO
+            Storage.SystemIO.Base.StorageHelper.Init(); //to initialize as SysIO
+            StorageHelper = StorageHelper.Creat(); 
         }
 
         public IEnumerable<RenameOrder> ProcessReplace

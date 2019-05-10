@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Gihan.Helpers.Linq;
 using Gihan.Helpers.String;
 using Gihan.Renamer.Models;
 using Gihan.Renamer.Models.Enums;
@@ -17,29 +18,18 @@ namespace Gihan.Renamer
         protected static IEnumerable<IStorageItem> FetchItems(IFolder rootFolder, RenameFlags renameFlags)
         {
             var items = new List<IStorageItem>();
-
-            const RenameFlags arefoldersUsed = RenameFlags.Folder | RenameFlags.SubFolders;
-            IFolder[] folders = null;
-            if ((arefoldersUsed & renameFlags) > 0)
-            {
-                folders = rootFolder.GetFolders().ToArray();
-            }
-
             if (renameFlags.HasFlag(RenameFlags.Files))
-            {
                 items.AddRange(rootFolder.GetFiles());
-            }
 
-            if (folders is null) return items;
+            IEnumerable<IFolder> folders = null;
             if (renameFlags.HasFlag(RenameFlags.Folder))
+                items.AddRange(folders ?? (folders = rootFolder.GetFolders()));
+            if (renameFlags.HasFlag(RenameFlags.SubFolders))
             {
-                items.AddRange(folders);
-            }
-
-            if (!renameFlags.HasFlag(RenameFlags.SubFolders)) return items;
-            foreach (var folder in folders)
-            {
-                items.AddRange(FetchItems(folder, renameFlags));
+                foreach (var folder in folders ?? rootFolder.GetFolders())
+                {
+                    items.AddRange(FetchItems(folder, renameFlags));
+                }
             }
             return items;
         }
@@ -47,28 +37,26 @@ namespace Gihan.Renamer
         public IEnumerable<RenameOrder> ProcessReplace
             (IEnumerable<IStorageItem> items, IEnumerable<ReplacePattern> patterns, RenameFlags renameFlags)
         {
-            if (!(items is List<IStorageItem>))
-                items = items.ToList();
-            (items as List<IStorageItem>).OrderByDescending(i => i.Path, NaturalStringComparer.Default);
+            items = items.NaturalOrderByDescending(i => i.Path);
             var orderList = new List<RenameOrder>();
-            var patternsArr = patterns.ToArray();
             foreach (var storageItem in items)
             {
-                var order = new RenameOrder { FilePath = storageItem.Path };
+                var order = new RenameOrder { Path = storageItem.Path };
                 try
                 {
                     if (!storageItem.Exist)
                         throw new Exception($"'{storageItem.Path}' not exist");
 
-                    var useExtension = !(storageItem is IFile) || renameFlags.HasFlag(RenameFlags.Extension);
-                    var name = useExtension ? storageItem.Name : (storageItem as IFile).PureName;
-                    var destName = name.Replaces(patternsArr);
-                    order.NewName = destName;
-
+                    var usePurename = (storageItem is IFile fileItem) && renameFlags.HasFlag(RenameFlags.Extension);
+                    var name = usePurename ? (storageItem as IFile).PureName : storageItem.Name;
+                    var destName = name.Replaces(patterns) + (usePurename ? (storageItem as IFile).Extension : "");
                     var destPath = Path.Combine(storageItem.Parent.Path, destName);
-                    if (StorageHelper.Creat().Exist(destPath))
+
+                    order.DestPath = destPath;
+
+                    if (StorageHelper.Exist(destPath))
                         throw new Exception($"A file with same path '{destPath}' already exist");
-                    if (orderList.Any(o => Path.Combine(Path.GetDirectoryName(o.FilePath), o.NewName) == destPath))
+                    if (orderList.Any(o => string.Equals(o.DestPath, destPath, StringComparison.OrdinalIgnoreCase)))
                         throw new Exception($"Some other file will rename to {destPath}");
                 }
                 catch (Exception err)
@@ -77,7 +65,7 @@ namespace Gihan.Renamer
                 }
                 orderList.Add(order);
             }
-            return orderList.OrderBy(o => o.FilePath, NaturalStringComparer.Default);
+            return orderList.NaturalOrderBy(o => o.Path);
         }
 
         public IEnumerable<RenameOrder> ProcessReplace

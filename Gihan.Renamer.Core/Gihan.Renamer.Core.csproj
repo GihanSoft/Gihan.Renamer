@@ -24,9 +24,10 @@ this will help you rename a group of files with special pattern</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Gihan.Storage.Core" Version="1.4.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
+    <PackageReference Include="Gihan.Helpers.StringHelper.NaturalStringComparer" Version="1.5.2" />
+    <PackageReference Include="Gihan.Storage.Core" Version="1.5.0" />
+    <PackageReference Include="LiteDB" Version="4.1.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
 
   <ItemGroup>

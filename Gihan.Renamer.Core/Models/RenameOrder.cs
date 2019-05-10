@@ -4,8 +4,8 @@ namespace Gihan.Renamer.Models
 {
     public class RenameOrder
     {
-        public string FilePath { get; set; }
-        public string NewName { get; set; }
+        public string Path { get; set; }
+        public string DestPath { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Message { get; set; }
 
@@ -16,7 +16,7 @@ namespace Gihan.Renamer.Models
         public static RenameOrder JsonArrayDeserialize(string jsonArr)
         {
             var arr = JsonConvert.DeserializeObject<string[]>(jsonArr);
-            return new RenameOrder { FilePath = arr[0], NewName = arr[1] };
+            return new RenameOrder { Path = arr[0], DestPath = arr[1] };
         }
     }
 
@@ -28,7 +28,7 @@ namespace Gihan.Renamer.Models
         }
         public static string JsonArraySerialize(this RenameOrder order)
         {
-            var arr = new[] { order.FilePath, order.NewName };
+            var arr = new[] { order.Path, order.DestPath };
             return JsonConvert.SerializeObject(arr);
         }
     }
