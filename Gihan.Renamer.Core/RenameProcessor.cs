@@ -37,7 +37,9 @@ namespace Gihan.Renamer
         public IEnumerable<RenameOrder> ProcessReplace
             (IEnumerable<IStorageItem> items, IEnumerable<ReplacePattern> patterns, RenameFlags renameFlags)
         {
-            items = items.NaturalOrderByDescending(i => i.Path);
+            items = items.GroupBy(i => i.Parent.Path).NaturalOrderByDescending(g => g.Key).
+                     SelectMany(g => g.NaturalOrderBy(i => i.Path));
+
             var orderList = new List<RenameOrder>();
             foreach (var storageItem in items)
             {
@@ -65,7 +67,7 @@ namespace Gihan.Renamer
                 }
                 orderList.Add(order);
             }
-            return orderList.NaturalOrderBy(o => o.Path);
+            return orderList;
         }
 
         public IEnumerable<RenameOrder> ProcessReplace

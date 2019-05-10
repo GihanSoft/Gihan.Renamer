@@ -2,6 +2,7 @@ using Gihan.Helpers.String;
 using Gihan.Renamer.Models;
 using Gihan.Renamer.Models.Enums;
 using Gihan.Renamer.SystemIO;
+using System.Linq;
 using Xunit;
 
 namespace TestSysIO
@@ -22,6 +23,16 @@ namespace TestSysIO
             src = src.Replace(("*", "This Is <-05> Text"));
             src = src.Replace(("*", "This Is <-05> Text"));
             Assert.Equal("This Is -03 Text", src);
+        }
+
+        [Fact]
+        public void Test2()
+        {
+            var renameProcessor = new RenameProcessor();
+            var orders = renameProcessor.ProcessReplace(@"D:\WorkSpace\rename",
+                new ReplacePattern[] { ("(", "["), (")", "]") }, RenameFlags.Default);
+            var renamer = new Renamer();
+            renamer.Rename(orders);
         }
     }
 }

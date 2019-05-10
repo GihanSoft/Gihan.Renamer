@@ -15,7 +15,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <ApplicationIcon>..\renameIcon.ico</ApplicationIcon>
     <PackageId>Gihan.Renamer.SystemIO</PackageId>
-    <Version>1.4.1</Version>
+    <Version>1.4.3</Version>
     <RootNamespace>Gihan.Renamer.SystemIO</RootNamespace>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>

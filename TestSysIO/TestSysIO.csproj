@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Gihan.Renamer.Core\Gihan.Renamer.Core.csproj" />
     <ProjectReference Include="..\Gihan.Renamer.SystemIO\Gihan.Renamer.SystemIO.csproj" />
   </ItemGroup>
 

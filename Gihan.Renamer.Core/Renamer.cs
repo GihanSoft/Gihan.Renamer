@@ -17,19 +17,16 @@ namespace Gihan.Renamer
             var renames = new List<RenameOrder>();
             foreach (var renameOrder in renameOrders)
             {
-                var renamed = true;
                 try
                 {
                     var item = StorageHelper.GetItem(renameOrder.Path);
                     item.Move(renameOrder.DestPath);
-                    renames.Add(renameOrder);
                 }
                 catch (Exception err)
                 {
                     renameOrder.Message = $"{err.GetType().FullName}: {err.Message}";
-                    renamed = false;
                 }
-                yield return renamed;
+                renames.Add(renameOrder);
             }
             var db = new AppDbContext();
             var gp = new RenameGroup()
@@ -39,6 +36,7 @@ namespace Gihan.Renamer
             };
             db.RenameGroups.Insert(gp);
             db.Dispose();
+            return renames.Select(r => string.IsNullOrWhiteSpace(r.Message));
         }
     }
 }

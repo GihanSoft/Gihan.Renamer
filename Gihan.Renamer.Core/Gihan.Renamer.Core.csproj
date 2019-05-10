@@ -15,7 +15,7 @@ this will help you rename a group of files with special pattern</Description>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <ApplicationIcon>..\renameIcon.ico</ApplicationIcon>
     <PackageId>Gihan.Renamer.Core</PackageId>
-    <Version>1.4.1</Version>
+    <Version>1.4.3</Version>
     <RootNamespace>Gihan.Renamer</RootNamespace>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
