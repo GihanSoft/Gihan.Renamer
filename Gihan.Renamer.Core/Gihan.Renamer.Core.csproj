@@ -15,7 +15,7 @@ this will help you rename a group of files with special pattern</Description>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <ApplicationIcon>..\renameIcon.ico</ApplicationIcon>
     <PackageId>Gihan.Renamer.Core</PackageId>
-    <Version>1.5.0</Version>
+    <Version>1.5.1</Version>
     <RootNamespace>Gihan.Renamer</RootNamespace>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageReleaseNotes>- Added log for RenameProcess
@@ -27,7 +27,7 @@ this will help you rename a group of files with special pattern</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Gihan.Helpers.StringHelper.NaturalStringComparer" Version="1.5.2" />
+    <PackageReference Include="Gihan.Helpers.StringHelper.NaturalStringComparer" Version="1.6.0" />
     <PackageReference Include="Gihan.Storage.Core" Version="1.5.0" />
     <PackageReference Include="LiteDB" Version="4.1.4" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
