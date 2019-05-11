@@ -23,7 +23,7 @@ this will help you rename a group of files with special pattern</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\renameIcon.ico" Link="renameIcon.ico" />
+    <None Include="..\renameIcon.ico" Link="renameIcon.ico" />
   </ItemGroup>
 
   <ItemGroup>

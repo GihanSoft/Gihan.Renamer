@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\renameIcon.ico" Link="renameIcon.ico" />
+    <None Include="..\renameIcon.ico" Link="renameIcon.ico" />
   </ItemGroup>
 
   <ItemGroup>
