@@ -28,14 +28,15 @@ namespace Gihan.Renamer
                 }
                 renames.Add(renameOrder);
             }
-            var db = new AppDbContext();
-            var gp = new RenameGroup()
+            using (var db = new AppDbContext())
             {
-                DateTime = DateTime.Now,
-                Renames = renames
-            };
-            db.RenameGroups.Insert(gp);
-            db.Dispose();
+                var gp = new RenameGroup()
+                {
+                    DateTime = DateTime.Now,
+                    Renames = renames
+                };
+                db.RenameGroups.Insert(gp);
+            }
             return renames.Select(r => string.IsNullOrWhiteSpace(r.Message));
         }
     }

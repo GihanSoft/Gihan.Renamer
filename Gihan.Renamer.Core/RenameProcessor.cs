@@ -49,7 +49,7 @@ namespace Gihan.Renamer
                     if (!storageItem.Exist)
                         throw new Exception($"'{storageItem.Path}' not exist");
 
-                    var usePurename = (storageItem is IFile fileItem) && renameFlags.HasFlag(RenameFlags.Extension);
+                    var usePurename = (storageItem is IFile fileItem) && !renameFlags.HasFlag(RenameFlags.Extension);
                     var name = usePurename ? (storageItem as IFile).PureName : storageItem.Name;
                     var destName = name.Replaces(patterns) + (usePurename ? (storageItem as IFile).Extension : "");
                     var destPath = Path.Combine(storageItem.Parent.Path, destName);
@@ -67,6 +67,17 @@ namespace Gihan.Renamer
                 }
                 orderList.Add(order);
             }
+
+            using (var db = new AppDbContext())
+            {
+                db.Processes.Insert(new RenameProcess()
+                {
+                    DateTime = DateTime.Now,
+                    Items = items.Select(i => i.Path),
+                    Patterns = patterns
+                });
+            }
+
             return orderList;
         }
 

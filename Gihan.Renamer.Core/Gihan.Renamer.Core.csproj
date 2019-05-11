@@ -11,13 +11,15 @@ this will help you rename a group of files with special pattern</Description>
     <PackageProjectUrl>https://github.com/chiefmb/Gihan.Renamer</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/chiefmb/Gihan.Renamer/master/renameIcon.ico</PackageIconUrl>
     <RepositoryUrl>https://github.com/chiefmb/Gihan.Renamer</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
+    <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <ApplicationIcon>..\renameIcon.ico</ApplicationIcon>
     <PackageId>Gihan.Renamer.Core</PackageId>
-    <Version>1.4.3</Version>
+    <Version>1.5.0</Version>
     <RootNamespace>Gihan.Renamer</RootNamespace>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageReleaseNotes>- Added log for RenameProcess
+- Extension flag bug fixed</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
