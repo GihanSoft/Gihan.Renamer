@@ -34,8 +34,9 @@ namespace Gihan.Renamer
             return items;
         }
 
-        public IEnumerable<RenameOrder> ProcessReplace
-            (IEnumerable<IStorageItem> items, IEnumerable<ReplacePattern> patterns, RenameFlags renameFlags)
+        protected IEnumerable<RenameOrder> ProcessReplace
+            (IEnumerable<IStorageItem> items, IEnumerable<ReplacePattern> patterns, 
+            RenameFlags renameFlags, string rootFolder = null)
         {
             items = items.GroupBy(i => i.Parent.Path).NaturalOrderByDescending(g => g.Key).
                      SelectMany(g => g.NaturalOrderBy(i => i.Path));
@@ -68,13 +69,15 @@ namespace Gihan.Renamer
                 orderList.Add(order);
             }
 
-            using (var db = new AppDbContext())
+            using (var db = new RenameDbContext())
             {
                 db.Processes.Insert(new RenameProcess()
                 {
                     DateTime = DateTime.Now,
+                    RootFolder = rootFolder,
                     Items = items.Select(i => i.Path),
-                    Patterns = patterns
+                    Patterns = patterns,
+                    RenameFlags = renameFlags
                 });
             }
 
@@ -82,10 +85,14 @@ namespace Gihan.Renamer
         }
 
         public IEnumerable<RenameOrder> ProcessReplace
+            (IEnumerable<IStorageItem> items, IEnumerable<ReplacePattern> patterns, RenameFlags renameFlags)
+                => ProcessReplace(items, patterns, renameFlags);
+
+        public IEnumerable<RenameOrder> ProcessReplace
             (IFolder rootFolder, IEnumerable<ReplacePattern> patterns, RenameFlags renameFlags)
         {
             var items = FetchItems(rootFolder, renameFlags);
-            return ProcessReplace(items, patterns, renameFlags);
+            return ProcessReplace(items, patterns, renameFlags, rootFolder.Path);
         }
     }
 }

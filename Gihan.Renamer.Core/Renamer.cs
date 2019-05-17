@@ -28,7 +28,7 @@ namespace Gihan.Renamer
                 }
                 renames.Add(renameOrder);
             }
-            using (var db = new AppDbContext())
+            using (var db = new RenameDbContext())
             {
                 var gp = new RenameGroup()
                 {
