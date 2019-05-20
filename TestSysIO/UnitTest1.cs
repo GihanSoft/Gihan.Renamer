@@ -34,5 +34,15 @@ namespace TestSysIO
             var renamer = new Renamer();
             renamer.Rename(orders);
         }
+
+        [Fact]
+        public void Test3()
+        {
+            var src = "some text";
+            var dest1 = src.Replace(("not*", "text<01>"));
+            Assert.Equal(src, dest1);
+            var dest2 = src.Replace(("some*", "text<-1>"));
+            var re = "me".Replace(("text-1", dest2));
+        }
     }
 }

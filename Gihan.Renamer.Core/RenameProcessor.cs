@@ -35,7 +35,7 @@ namespace Gihan.Renamer
         }
 
         protected IEnumerable<MoveOrder> ProcessReplace
-            (IEnumerable<IStorageItem> items, IEnumerable<ReplacePattern> patterns, 
+            (IEnumerable<IStorageItem> items, IEnumerable<ReplacePattern> patterns,
             RenameFlags renameFlags, string rootFolder = null)
         {
             items = items.GroupBy(i => i.Parent.Path).NaturalOrderByDescending(g => g.Key).
@@ -66,7 +66,8 @@ namespace Gihan.Renamer
                 {
                     order.Message = $"{err.GetType().FullName}: {err.Message}";
                 }
-                orderList.Add(order);
+                if (order.Path != order.DestPath)
+                    orderList.Add(order);
             }
 
             using (var db = new RenameDbContext())
