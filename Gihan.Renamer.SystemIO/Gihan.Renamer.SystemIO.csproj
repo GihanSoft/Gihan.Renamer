@@ -17,7 +17,8 @@
     <PackageId>Gihan.Renamer.SystemIO</PackageId>
     <Version>1.5.3</Version>
     <RootNamespace>Gihan.Renamer.SystemIO</RootNamespace>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageReleaseNotes>- Rename RenameOrder to MoveOrder
+- Pull out not changed orders</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
 

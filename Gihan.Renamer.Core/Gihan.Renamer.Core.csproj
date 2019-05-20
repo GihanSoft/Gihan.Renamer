@@ -18,8 +18,8 @@ this will help you rename a group of files with special pattern</Description>
     <Version>1.5.3</Version>
     <RootNamespace>Gihan.Renamer</RootNamespace>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <PackageReleaseNotes>- Added log for RenameProcess
-- Extension flag bug fixed</PackageReleaseNotes>
+    <PackageReleaseNotes>- Rename RenameOrder to MoveOrder
+- Pull out not changed orders</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
