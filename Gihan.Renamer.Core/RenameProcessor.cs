@@ -34,17 +34,17 @@ namespace Gihan.Renamer
             return items;
         }
 
-        protected IEnumerable<RenameOrder> ProcessReplace
+        protected IEnumerable<MoveOrder> ProcessReplace
             (IEnumerable<IStorageItem> items, IEnumerable<ReplacePattern> patterns, 
             RenameFlags renameFlags, string rootFolder = null)
         {
             items = items.GroupBy(i => i.Parent.Path).NaturalOrderByDescending(g => g.Key).
                      SelectMany(g => g.NaturalOrderBy(i => i.Path));
 
-            var orderList = new List<RenameOrder>();
+            var orderList = new List<MoveOrder>();
             foreach (var storageItem in items)
             {
-                var order = new RenameOrder { Path = storageItem.Path };
+                var order = new MoveOrder { Path = storageItem.Path };
                 try
                 {
                     if (!storageItem.Exist)
@@ -84,11 +84,11 @@ namespace Gihan.Renamer
             return orderList;
         }
 
-        public IEnumerable<RenameOrder> ProcessReplace
+        public IEnumerable<MoveOrder> ProcessReplace
             (IEnumerable<IStorageItem> items, IEnumerable<ReplacePattern> patterns, RenameFlags renameFlags)
                 => ProcessReplace(items, patterns, renameFlags);
 
-        public IEnumerable<RenameOrder> ProcessReplace
+        public IEnumerable<MoveOrder> ProcessReplace
             (IFolder rootFolder, IEnumerable<ReplacePattern> patterns, RenameFlags renameFlags)
         {
             var items = FetchItems(rootFolder, renameFlags);

@@ -17,13 +17,13 @@ namespace Gihan.Renamer.SystemIO
             StorageHelper = StorageHelper.Creat(); 
         }
 
-        public IEnumerable<RenameOrder> ProcessReplace
+        public IEnumerable<MoveOrder> ProcessReplace
             (IEnumerable<string> itemsPath, IEnumerable<ReplacePattern> patterns, RenameFlags renameFlags)
         {
             return ProcessReplace(itemsPath.Select(ip => StorageHelper.GetItem(ip)), patterns, renameFlags);
         }
 
-        public IEnumerable<RenameOrder> ProcessReplace
+        public IEnumerable<MoveOrder> ProcessReplace
             (string rootFolderPath, IEnumerable<ReplacePattern> patterns, RenameFlags renameFlags)
         {
             return ProcessReplace(new Folder(rootFolderPath), patterns, renameFlags);

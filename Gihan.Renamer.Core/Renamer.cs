@@ -12,9 +12,9 @@ namespace Gihan.Renamer
     {
         protected abstract StorageHelper StorageHelper { get; }
 
-        public IEnumerable<bool> Rename(IEnumerable<RenameOrder> renameOrders)
+        public IEnumerable<bool> Rename(IEnumerable<MoveOrder> renameOrders)
         {
-            var renames = new List<RenameOrder>();
+            var renames = new List<MoveOrder>();
             foreach (var renameOrder in renameOrders)
             {
                 try

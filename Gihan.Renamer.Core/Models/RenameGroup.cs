@@ -8,6 +8,6 @@ namespace Gihan.Renamer.Models
     {
         public long Id { get; set; }
         public DateTime DateTime { get; set; }
-        public IEnumerable<RenameOrder> Renames { get; set; }
+        public IEnumerable<MoveOrder> Renames { get; set; }
     }
 }
